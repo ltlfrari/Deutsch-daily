@@ -769,7 +769,6 @@ function navigateLesson(dir) {
   const pool = getPool();
   let next = (currentLessonIdx + dir + pool.length) % pool.length;
   if (!isLessonUnlocked(next)) {
-    // Find the test that locks it
     const blockNum = Math.floor(next / TEST_INTERVAL);
     const testIdx = blockNum - 1;
     if (confirm('You need to pass Test ' + (testIdx + 1) + ' to unlock these lessons. Take the test now?')) {
@@ -778,6 +777,12 @@ function navigateLesson(dir) {
     return;
   }
   currentLessonIdx = next;
+  // Track furthest visited so we can restore position on reopen
+  const prev = state.seenIndex[state.level] || 0;
+  if (next + 1 > prev) {
+    state.seenIndex[state.level] = next + 1;
+    saveState(state);
+  }
   renderLesson();
   document.getElementById('screen-today').scrollTop = 0;
 }
@@ -1299,6 +1304,38 @@ document.getElementById('save-settings').addEventListener('click', saveSettings)
 document.getElementById('btn-notif').addEventListener('click', requestNotifPermission);
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
+
+// Restore last position
+(function restorePosition() {
+  const pool = getPool();
+
+  // If a test is in progress (shouldn't normally happen), clear it
+  quizState = null;
+
+  // Find the furthest unlocked lesson the user has visited
+  // seenIndex tracks the next unseen lesson, so furthest seen = seenIndex - 1
+  const seen = (state.seenIndex[state.level] || 0);
+  const furthest = Math.max(0, seen - 1);
+
+  // Check if a test is due at this position
+  const blockNum = Math.floor(furthest / TEST_INTERVAL);
+  const testIdx = blockNum;
+  const passed = getTestState();
+  const totalTests = Math.floor(pool.length / TEST_INTERVAL);
+  const testDue = testIdx < totalTests &&
+                  !passed.includes(testIdx) &&
+                  furthest >= (testIdx + 1) * TEST_INTERVAL - 1;
+
+  if (testDue) {
+    // Position to last lesson of completed block, test badge will show
+    currentLessonIdx = (testIdx + 1) * TEST_INTERVAL - 1;
+  } else {
+    // Position to furthest seen lesson, clamped to unlocked
+    let idx = furthest;
+    while (idx > 0 && !isLessonUnlocked(idx)) idx--;
+    currentLessonIdx = idx;
+  }
+})();
 
 renderLesson();
 showNagBanner();
