@@ -868,7 +868,7 @@ function renderLesson() {
   const testDue = (testIndex => {
     if (testIndex >= totalTests) return false;
     if (passed.includes(testIndex)) return false;
-    // Test is due if we've completed the block (currentLessonIdx >= (testIndex+1)*TEST_INTERVAL - 1)
+    // Test is due if block is complete
     return currentLessonIdx >= (testIndex + 1) * TEST_INTERVAL - 1;
   })(testIdx);
 
@@ -1030,7 +1030,7 @@ function renderHistory() {
 function retakeTestFromHistory(testIdx) {
   // Switch to today tab first then launch quiz in practice mode
   showScreen('today');
-  startQuiz(testIdx, true); // true = practice mode, won't affect pass status
+  startQuiz(testIdx, true); // true = practice mode, will not affect pass status
 }
 
 function renderSettings() {
@@ -1078,7 +1078,7 @@ function isLessonUnlocked(idx) {
   return passed.includes(blockNum - 1);
 }
 
-// Is a test due right now? (completed 5 lessons but haven't passed the test yet)
+// Is a test due right now?
 function isTestDue() {
   const passed = getTestState();
   const pool = getPool();
@@ -1089,7 +1089,7 @@ function isTestDue() {
       const blockStart = i * TEST_INTERVAL;
       const blockEnd = blockStart + TEST_INTERVAL - 1;
       // Check if any lesson in this block has been studied today or ever
-      // We just check if they've navigated to lesson blockEnd (seen it)
+      // Check if navigated to lesson blockEnd
       // Simpler: test is available as soon as first 5 lessons of block are accessible
       return i; // return test index
     }
@@ -1220,7 +1220,7 @@ function renderQuiz() {
         <div class="quiz-result-title">${passed ? 'Ausgezeichnet!' : 'Nicht ganz...'}</div>
         <div class="quiz-result-score">${score} / ${total} correct — ${pct}%</div>
         <div class="quiz-result-msg">${quizState.practiceMode
-          ? (passed ? 'Great practice run! Your pass status is unchanged.' : 'Keep practising — you'll get there!')
+          ? (passed ? 'Great practice run! Your pass status is unchanged.' : 'Keep practising — you will get there!')
           : (passed ? 'You passed! The next 5 lessons are now unlocked.' : 'You need 90% to pass. Go back and review the lessons, then try again.')
         }</div>
         <button class="quiz-result-btn" onclick="finishQuiz(${passed})">${passed ? 'Continue →' : (quizState.practiceMode ? 'Back to lessons' : 'Review lessons')}</button>
@@ -1330,7 +1330,7 @@ function showNagPopup() {
 
 function dismissNagPopup(study) {
   document.getElementById('nag-popup').classList.remove('show');
-  // if they tapped Jetzt lernen, just close — they're already on the lesson screen
+  // if they tapped Jetzt lernen, just close - already on the lesson screen
 }
 
 // ── SERVICE WORKER & NOTIFICATIONS ──────────────────────────────────────────
@@ -1449,7 +1449,7 @@ document.getElementById('btn-notif').addEventListener('click', requestNotifPermi
 (function restorePosition() {
   const pool = getPool();
 
-  // If a test is in progress (shouldn't normally happen), clear it
+  // If a test is in progress, clear it
   quizState = null;
 
   // Find the furthest unlocked lesson the user has visited
