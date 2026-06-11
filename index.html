@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Deutsch Daily">
+<meta name="theme-color" content="#1a1a2e">
+<title>Deutsch Daily</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap');
+
+  :root {
+    --bg:        #0f0f1a;
+    --surface:   #1a1a2e;
+    --card:      #22223b;
+    --accent:    #f2cc8f;
+    --accent2:   #81b29a;
+    --muted:     #9999bb;
+    --text:      #eeeeff;
+    --danger:    #e07a5f;
+    --radius:    18px;
+    --safe-top:  env(safe-area-inset-top, 0px);
+    --safe-bot:  env(safe-area-inset-bottom, 0px);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    overflow: hidden;
+  }
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-top: var(--safe-top);
+    padding-bottom: var(--safe-bot);
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; flex-direction: column; flex: 1; overflow-y: auto; padding: 0 20px 32px; }
+  .screen.active { display: flex; }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 10px;
+    flex-shrink: 0;
+  }
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--muted); font-size: 13px; font-family: 'DM Sans', sans-serif; display: block; font-weight: 300; letter-spacing: 0.5px; margin-top: -2px; }
+  .header-btns { display: flex; gap: 8px; }
+  .icon-btn {
+    background: var(--card);
+    border: none;
+    border-radius: 12px;
+    color: var(--muted);
+    width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: color .2s, background .2s;
+  }
+  .icon-btn:active { background: var(--accent); color: var(--bg); }
+
+  /* ── NAG BANNER ── */
+  #nag-banner {
+    margin: 0 20px 14px;
+    background: linear-gradient(135deg, #2d1b4e, #1a2d4e);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    display: none;
+    border: 1px solid #3a2a66;
+  }
+  #nag-banner.show { display: block; }
+  #nag-banner p { font-size: 14px; font-style: italic; color: #c8b8f0; line-height: 1.4; }
+  #nag-banner strong { color: var(--accent); font-style: normal; }
+
+  /* ── LESSON CARD ── */
+  .lesson-date {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+    margin-top: 8px;
+  }
+
+  .word-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .word-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    border-radius: 4px 0 0 4px;
+  }
+  .word-card.noun::before { background: var(--accent); }
+  .word-card.verb::before { background: var(--accent2); }
+  .word-card.adjective::before { background: var(--danger); }
+
+  .word-type {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .noun .word-type    { color: var(--accent); }
+  .verb .word-type    { color: var(--accent2); }
+  .adjective .word-type { color: var(--danger); }
+
+  .word-de {
+    font-family: 'DM Serif Display', serif;
+    font-size: 30px;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .word-article {
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 300;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .word-en {
+    font-size: 16px;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .word-note {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* reveal toggle */
+  .reveal-btn {
+    margin-top: 10px;
+    background: transparent;
+    border: 1px solid #333355;
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 13px;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .2s;
+  }
+  .reveal-btn:active { background: var(--surface); color: var(--text); }
+  .hidden-en { display: none; }
+  .hidden-en.shown { display: block; }
+
+  /* sentence card */
+  .sentence-card {
+    background: linear-gradient(135deg, var(--card), #1e1e35);
+    border-radius: var(--radius);
+    padding: 22px;
+    margin-bottom: 20px;
+    border: 1px solid #2a2a4a;
+  }
+  .sentence-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 10px;
+  }
+  .sentence-de {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    line-height: 1.4;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .sentence-en {
+    font-size: 14px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* streak */
+  .streak-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 20px;
+  }
+  .streak-flame { font-size: 28px; }
+  .streak-info { flex: 1; }
+  .streak-num { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--accent); line-height: 1; }
+  .streak-label { font-size: 12px; color: var(--muted); }
+  .done-badge {
+    background: var(--accent2);
+    color: #0a1a12;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── LESSON NAV ── */
+  .lesson-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 10px;
+  }
+  .nav-arrow {
+    background: var(--card);
+    border: none;
+    border-radius: 14px;
+    color: var(--muted);
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    transition: color .2s, background .2s;
+    flex-shrink: 0;
+  }
+  .nav-arrow:active { background: var(--accent); color: var(--bg); }
+  .nav-arrow:disabled { opacity: 0.25; pointer-events: none; }
+  .lesson-counter {
+    flex: 1;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ── SETTINGS ── */
+  .settings-section { margin-top: 24px; }
+  .settings-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .setting-row {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .setting-label { font-size: 15px; font-weight: 500; }
+  .setting-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* toggle */
+  .toggle {
+    position: relative;
+    width: 50px; height: 28px;
+    flex-shrink: 0;
+  }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-track {
+    position: absolute; inset: 0;
+    background: #333355;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background .3s;
+  }
+  .toggle-track::after {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 22px; height: 22px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform .3s;
+  }
+  .toggle input:checked + .toggle-track { background: var(--accent2); }
+  .toggle input:checked + .toggle-track::after { transform: translateX(22px); }
+
+  /* level selector */
+  .level-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .level-pill {
+    border: 1px solid #333355;
+    border-radius: 20px;
+    padding: 7px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background: transparent;
+    color: var(--muted);
+    font-family: inherit;
+    transition: all .2s;
+  }
+  .level-pill.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  /* nag time */
+  .time-input {
+    background: var(--surface);
+    border: 1px solid #333355;
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 15px;
+    padding: 8px 14px;
+    font-family: inherit;
+    width: 120px;
+    text-align: center;
+  }
+  .time-input:focus { outline: 1px solid var(--accent); }
+
+  .save-btn {
+    width: 100%;
+    margin-top: 28px;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    border-radius: var(--radius);
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: opacity .2s;
+  }
+  .save-btn:active { opacity: 0.8; }
+
+  .settings-note {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── BOTTOM NAV ── */
+  nav {
+    display: flex;
+    background: var(--surface);
+    border-top: 1px solid #222240;
+    flex-shrink: 0;
+    padding-bottom: var(--safe-bot);
+  }
+  .nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0 8px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    font-family: inherit;
+    gap: 3px;
+    transition: color .2s;
+  }
+  .nav-btn .nav-icon { font-size: 22px; }
+  .nav-btn.active { color: var(--accent); }
+
+  /* ── HISTORY SCREEN ── */
+  .history-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 15px;
+    padding-bottom: 60px;
+  }
+  .history-empty .big { font-size: 48px; }
+
+  .history-day {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 10px;
+  }
+  .history-day-date { font-size: 12px; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.5px; }
+  .history-words { display: flex; flex-wrap: wrap; gap: 8px; }
+  .hw-chip {
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+  .hw-chip span { color: var(--muted); font-size: 12px; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #333355; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="logo">Deutsch Daily <span id="level-badge">A1</span></div>
+    <div class="header-btns">
+      <button class="icon-btn" id="btn-notif" title="Enable notifications">🔔</button>
+    </div>
+  </header>
+
+  <div id="nag-banner">
+    <p id="nag-text"></p>
+  </div>
+
+  <!-- ── TODAY ── -->
+  <div class="screen active" id="screen-today">
+    <div class="lesson-date" id="today-date"></div>
+    <div class="streak-row">
+      <div class="streak-flame">🔥</div>
+      <div class="streak-info">
+        <div class="streak-num" id="streak-num">0</div>
+        <div class="streak-label">day streak</div>
+      </div>
+      <div class="done-badge" id="done-badge" style="display:none">✓ Done today</div>
+    </div>
+    <div class="lesson-nav">
+      <button class="nav-arrow" id="btn-prev" onclick="navigateLesson(-1)">‹</button>
+      <div class="lesson-counter" id="lesson-counter"></div>
+      <button class="nav-arrow" id="btn-next" onclick="navigateLesson(1)">›</button>
+    </div>
+    <div id="lesson-content"></div>
+  </div>
+
+  <!-- ── HISTORY ── -->
+  <div class="screen" id="screen-history">
+    <div class="lesson-date" style="margin-top:8px">PAST LESSONS</div>
+    <div id="history-content"></div>
+  </div>
+
+  <!-- ── SETTINGS ── -->
+  <div class="screen" id="screen-settings">
+    <div class="settings-section">
+      <div class="settings-title">Level</div>
+      <div class="level-pills">
+        <button class="level-pill" data-level="A1">A1</button>
+        <button class="level-pill" data-level="A2">A2</button>
+        <button class="level-pill" data-level="B1">B1</button>
+        <button class="level-pill" data-level="B2">B2</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">Daily Reminder</div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Enable nag</div>
+          <div class="setting-sub">Daily push notification reminder</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="nag-toggle">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Reminder time</div>
+          <div class="setting-sub">When to nudge you</div>
+        </div>
+        <input type="time" class="time-input" id="nag-time" value="09:00">
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">Display</div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Hide translations</div>
+          <div class="setting-sub">Tap to reveal each word</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="hide-toggle">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+    </div>
+
+    <button class="save-btn" id="save-settings">Save Settings</button>
+    <p class="settings-note">Notifications require granting permission when prompted.<br>On iOS, add this page to your Home Screen for best results.</p>
+  </div>
+
+  <nav>
+    <button class="nav-btn active" data-screen="today">
+      <span class="nav-icon">📖</span>Today
+    </button>
+    <button class="nav-btn" data-screen="history">
+      <span class="nav-icon">📅</span>History
+    </button>
+    <button class="nav-btn" data-screen="settings">
+      <span class="nav-icon">⚙️</span>Settings
+    </button>
+  </nav>
+</div>
+
+<script>
+// ── DATA ────────────────────────────────────────────────────────────────────
+
+const VOCAB = {
+  // A1: 2 nouns, 1 verb, 1 adj, 2 sentences
+  A1: [
+    { nouns: [{de:'der Hund', en:'the dog', note:'masculine'}, {de:'die Katze', en:'the cat', note:'feminine'}], verbs: [{de:'laufen', en:'to run', conj:'er läuft'}], adjs: [{de:'schnell', en:'fast'}], sentences: [{de:'Der Hund läuft schnell.', en:'The dog runs fast.'}, {de:'Die Katze ist auch schnell.', en:'The cat is also fast.'}] },
+    { nouns: [{de:'das Haus', en:'the house', note:'neuter'}, {de:'die Tür', en:'the door', note:'feminine'}], verbs: [{de:'öffnen', en:'to open', conj:'er öffnet'}], adjs: [{de:'groß', en:'big'}], sentences: [{de:'Die Tür ist groß.', en:'The door is big.'}, {de:'Er öffnet die große Tür.', en:'He opens the big door.'}] },
+    { nouns: [{de:'der Mann', en:'the man', note:'masculine'}, {de:'die Frau', en:'the woman', note:'feminine'}], verbs: [{de:'gehen', en:'to go', conj:'er geht'}], adjs: [{de:'jung', en:'young'}], sentences: [{de:'Die junge Frau geht schnell.', en:'The young woman goes quickly.'}, {de:'Der Mann ist jung.', en:'The man is young.'}] },
+    { nouns: [{de:'das Wasser', en:'the water', note:'neuter'}, {de:'das Brot', en:'the bread', note:'neuter'}], verbs: [{de:'essen', en:'to eat', conj:'er isst'}], adjs: [{de:'frisch', en:'fresh'}], sentences: [{de:'Er isst frisches Brot.', en:'He eats fresh bread.'}, {de:'Das Wasser ist frisch und kalt.', en:'The water is fresh and cold.'}] },
+    { nouns: [{de:'die Stadt', en:'the city', note:'feminine'}, {de:'die Straße', en:'the street', note:'feminine'}], verbs: [{de:'fahren', en:'to drive', conj:'er fährt'}], adjs: [{de:'lang', en:'long'}], sentences: [{de:'Die Straße ist lang.', en:'The street is long.'}, {de:'Er fährt durch die lange Straße.', en:'He drives through the long street.'}] },
+    { nouns: [{de:'das Kind', en:'the child', note:'neuter'}, {de:'der Ball', en:'the ball', note:'masculine'}], verbs: [{de:'spielen', en:'to play', conj:'er spielt'}], adjs: [{de:'klein', en:'small'}], sentences: [{de:'Das kleine Kind spielt.', en:'The small child plays.'}, {de:'Der Ball ist klein und rot.', en:'The ball is small and red.'}] },
+    { nouns: [{de:'die Schule', en:'the school', note:'feminine'}, {de:'das Buch', en:'the book', note:'neuter'}], verbs: [{de:'lesen', en:'to read', conj:'er liest'}], adjs: [{de:'interessant', en:'interesting'}], sentences: [{de:'Das Buch ist sehr interessant.', en:'The book is very interesting.'}, {de:'Er liest in der Schule.', en:'He reads at school.'}] },
+    { nouns: [{de:'der Zug', en:'the train', note:'masculine'}, {de:'der Bahnhof', en:'the station', note:'masculine'}], verbs: [{de:'ankommen', en:'to arrive', conj:'er kommt an'}], adjs: [{de:'pünktlich', en:'on time'}], sentences: [{de:'Der Zug kommt pünktlich an.', en:'The train arrives on time.'}, {de:'Am Bahnhof warten viele Menschen.', en:'Many people are waiting at the station.'}] },
+    { nouns: [{de:'das Wetter', en:'the weather', note:'neuter'}, {de:'die Sonne', en:'the sun', note:'feminine'}], verbs: [{de:'scheinen', en:'to shine', conj:'sie scheint'}], adjs: [{de:'warm', en:'warm'}], sentences: [{de:'Die Sonne scheint warm.', en:'The sun shines warmly.'}, {de:'Das Wetter ist heute sehr warm.', en:'The weather is very warm today.'}] },
+    { nouns: [{de:'der Markt', en:'the market', note:'masculine'}, {de:'das Gemüse', en:'the vegetables', note:'neuter'}], verbs: [{de:'kaufen', en:'to buy', conj:'er kauft'}], adjs: [{de:'frisch', en:'fresh'}], sentences: [{de:'Ich kaufe frisches Gemüse.', en:'I buy fresh vegetables.'}, {de:'Der Markt öffnet früh.', en:'The market opens early.'}] },
+    { nouns: [{de:'die Kirche', en:'the church', note:'feminine'}, {de:'der Turm', en:'the tower', note:'masculine'}], verbs: [{de:'sehen', en:'to see', conj:'er sieht'}], adjs: [{de:'alt', en:'old'}], sentences: [{de:'Ich sehe den alten Turm.', en:'I see the old tower.'}, {de:'Die Kirche ist sehr alt.', en:'The church is very old.'}] },
+    { nouns: [{de:'das Rathaus', en:'the town hall', note:'neuter'}, {de:'der Platz', en:'the square', note:'masculine'}], verbs: [{de:'stehen', en:'to stand', conj:'es steht'}], adjs: [{de:'schön', en:'beautiful'}], sentences: [{de:'Das Rathaus steht auf dem Platz.', en:'The town hall stands on the square.'}, {de:'Der Platz ist sehr schön.', en:'The square is very beautiful.'}] },
+    { nouns: [{de:'das Restaurant', en:'the restaurant', note:'neuter'}, {de:'die Speisekarte', en:'the menu', note:'feminine'}], verbs: [{de:'bestellen', en:'to order', conj:'er bestellt'}], adjs: [{de:'lecker', en:'delicious'}], sentences: [{de:'Ich bestelle etwas Leckeres.', en:'I order something delicious.'}, {de:'Die Speisekarte ist auf Deutsch.', en:'The menu is in German.'}] },
+    { nouns: [{de:'der Wein', en:'the wine', note:'masculine'}, {de:'das Bier', en:'the beer', note:'neuter'}], verbs: [{de:'trinken', en:'to drink', conj:'er trinkt'}], adjs: [{de:'kalt', en:'cold'}], sentences: [{de:'Er trinkt kaltes Bier.', en:'He drinks cold beer.'}, {de:'Der Wein ist nicht kalt.', en:'The wine is not cold.'}] },
+    { nouns: [{de:'der Berg', en:'the mountain', note:'masculine'}, {de:'das Tal', en:'the valley', note:'neuter'}], verbs: [{de:'wandern', en:'to hike', conj:'er wandert'}], adjs: [{de:'hoch', en:'high'}], sentences: [{de:'Der Berg ist sehr hoch.', en:'The mountain is very high.'}, {de:'Das Tal liegt tief unten.', en:'The valley lies far below.'}] },
+    { nouns: [{de:'die Küche', en:'the kitchen', note:'feminine'}, {de:'der Tisch', en:'the table', note:'masculine'}], verbs: [{de:'kochen', en:'to cook', conj:'er kocht'}], adjs: [{de:'sauber', en:'clean'}], sentences: [{de:'Die Küche ist sauber.', en:'The kitchen is clean.'}, {de:'Er kocht am Tisch.', en:'He cooks at the table.'}] },
+    { nouns: [{de:'das Zimmer', en:'the room', note:'neuter'}, {de:'das Fenster', en:'the window', note:'neuter'}], verbs: [{de:'schlafen', en:'to sleep', conj:'er schläft'}], adjs: [{de:'dunkel', en:'dark'}], sentences: [{de:'Das Zimmer ist dunkel.', en:'The room is dark.'}, {de:'Er schläft wenn es dunkel ist.', en:'He sleeps when it is dark.'}] },
+    { nouns: [{de:'der Arzt', en:'the doctor', note:'masculine'}, {de:'das Krankenhaus', en:'the hospital', note:'neuter'}], verbs: [{de:'helfen', en:'to help', conj:'er hilft'}], adjs: [{de:'krank', en:'sick'}], sentences: [{de:'Der Arzt hilft dem kranken Mann.', en:'The doctor helps the sick man.'}, {de:'Das Krankenhaus ist groß.', en:'The hospital is big.'}] },
+    { nouns: [{de:'der Hut', en:'the hat', note:'masculine'}, {de:'der Schuh', en:'the shoe', note:'masculine'}], verbs: [{de:'tragen', en:'to wear', conj:'er trägt'}], adjs: [{de:'neu', en:'new'}], sentences: [{de:'Er trägt einen neuen Hut.', en:'He wears a new hat.'}, {de:'Die Schuhe sind neu.', en:'The shoes are new.'}] },
+    { nouns: [{de:'der Garten', en:'the garden', note:'masculine'}, {de:'der Hof', en:'the courtyard', note:'masculine'}], verbs: [{de:'arbeiten', en:'to work', conj:'er arbeitet'}], adjs: [{de:'grün', en:'green'}], sentences: [{de:'Der Garten ist grün.', en:'The garden is green.'}, {de:'Er arbeitet im Garten.', en:'He works in the garden.'}] },
+    { nouns: [{de:'die Nacht', en:'the night', note:'feminine'}, {de:'der Morgen', en:'the morning', note:'masculine'}], verbs: [{de:'aufstehen', en:'to get up', conj:'er steht auf'}], adjs: [{de:'früh', en:'early'}], sentences: [{de:'Er steht früh auf.', en:'He gets up early.'}, {de:'Der Morgen ist kalt.', en:'The morning is cold.'}] },
+    { nouns: [{de:'der Brief', en:'the letter', note:'masculine'}, {de:'die Post', en:'the post office', note:'feminine'}], verbs: [{de:'schreiben', en:'to write', conj:'er schreibt'}], adjs: [{de:'lang', en:'long'}], sentences: [{de:'Er schreibt einen langen Brief.', en:'He writes a long letter.'}, {de:'Die Post ist geschlossen.', en:'The post office is closed.'}] },
+    { nouns: [{de:'der Freund', en:'the friend', note:'masculine'}, {de:'die Familie', en:'the family', note:'feminine'}], verbs: [{de:'besuchen', en:'to visit', conj:'er besucht'}], adjs: [{de:'nett', en:'nice'}], sentences: [{de:'Er besucht seine nette Familie.', en:'He visits his nice family.'}, {de:'Der Freund ist sehr nett.', en:'The friend is very nice.'}] },
+    { nouns: [{de:'das Auto', en:'the car', note:'neuter'}, {de:'die Garage', en:'the garage', note:'feminine'}], verbs: [{de:'parken', en:'to park', conj:'er parkt'}], adjs: [{de:'rot', en:'red'}], sentences: [{de:'Er parkt das rote Auto.', en:'He parks the red car.'}, {de:'Die Garage ist leer.', en:'The garage is empty.'}] },
+    { nouns: [{de:'der Supermarkt', en:'the supermarket', note:'masculine'}, {de:'die Kasse', en:'the checkout', note:'feminine'}], verbs: [{de:'bezahlen', en:'to pay', conj:'er bezahlt'}], adjs: [{de:'teuer', en:'expensive'}], sentences: [{de:'Er bezahlt an der Kasse.', en:'He pays at the checkout.'}, {de:'Das Essen ist teuer.', en:'The food is expensive.'}] },
+    { nouns: [{de:'der Abend', en:'the evening', note:'masculine'}, {de:'das Konzert', en:'the concert', note:'neuter'}], verbs: [{de:'hören', en:'to listen', conj:'er hört'}], adjs: [{de:'laut', en:'loud'}], sentences: [{de:'Das Konzert ist laut.', en:'The concert is loud.'}, {de:'Am Abend hört er Musik.', en:'In the evening he listens to music.'}] },
+  ],
+  // A2: 3 nouns, 2 verbs, 2 adj, 2 sentences
+  A2: [
+    { nouns: [{de:'der Urlaub', en:'the holiday', note:'masculine'}, {de:'die Reise', en:'the journey', note:'feminine'}, {de:'das Gepäck', en:'the luggage', note:'neuter'}], verbs: [{de:'planen', en:'to plan', conj:'er plant'}, {de:'packen', en:'to pack', conj:'er packt'}], adjs: [{de:'aufregend', en:'exciting'}, {de:'schwer', en:'heavy'}], sentences: [{de:'Wir planen eine aufregende Reise.', en:'We plan an exciting journey.'}, {de:'Das Gepäck ist zu schwer zum Tragen.', en:'The luggage is too heavy to carry.'}] },
+    { nouns: [{de:'die Unterkunft', en:'the accommodation', note:'feminine'}, {de:'das Hotel', en:'the hotel', note:'neuter'}, {de:'das Frühstück', en:'the breakfast', note:'neuter'}], verbs: [{de:'buchen', en:'to book', conj:'er bucht'}, {de:'frühstücken', en:'to have breakfast', conj:'er frühstückt'}], adjs: [{de:'bequem', en:'comfortable'}, {de:'lecker', en:'delicious'}], sentences: [{de:'Ich buche ein bequemes Hotel.', en:'I book a comfortable hotel.'}, {de:'Das Frühstück im Hotel ist sehr lecker.', en:'The breakfast at the hotel is very delicious.'}] },
+    { nouns: [{de:'der Flughafen', en:'the airport', note:'masculine'}, {de:'das Flugzeug', en:'the aeroplane', note:'neuter'}, {de:'die Bordkarte', en:'the boarding pass', note:'feminine'}], verbs: [{de:'einchecken', en:'to check in', conj:'er checkt ein'}, {de:'abfliegen', en:'to depart', conj:'es fliegt ab'}], adjs: [{de:'pünktlich', en:'on time'}, {de:'voll', en:'full'}], sentences: [{de:'Das Flugzeug fliegt pünktlich ab.', en:'The aeroplane departs on time.'}, {de:'Der Flughafen ist sehr voll heute.', en:'The airport is very full today.'}] },
+    { nouns: [{de:'die Landschaft', en:'the landscape', note:'feminine'}, {de:'der Fluss', en:'the river', note:'masculine'}, {de:'die Brücke', en:'the bridge', note:'feminine'}], verbs: [{de:'fotografieren', en:'to photograph', conj:'er fotografiert'}, {de:'überqueren', en:'to cross', conj:'er überquert'}], adjs: [{de:'wunderschön', en:'wonderful'}, {de:'breit', en:'wide'}], sentences: [{de:'Die Landschaft ist wunderschön hier.', en:'The landscape is wonderful here.'}, {de:'Er überquert die breite Brücke.', en:'He crosses the wide bridge.'}] },
+    { nouns: [{de:'der Stadtplan', en:'the city map', note:'masculine'}, {de:'die Sehenswürdigkeit', en:'the attraction', note:'feminine'}, {de:'das Museum', en:'the museum', note:'neuter'}], verbs: [{de:'besuchen', en:'to visit', conj:'er besucht'}, {de:'suchen', en:'to look for', conj:'er sucht'}], adjs: [{de:'bekannt', en:'famous'}, {de:'historisch', en:'historic'}], sentences: [{de:'Wir besuchen das historische Museum.', en:'We visit the historic museum.'}, {de:'Er sucht die berühmte Sehenswürdigkeit auf dem Stadtplan.', en:'He looks for the famous attraction on the city map.'}] },
+    { nouns: [{de:'der Zug', en:'the train', note:'masculine'}, {de:'die Fahrkarte', en:'the ticket', note:'feminine'}, {de:'der Schalter', en:'the counter', note:'masculine'}], verbs: [{de:'kaufen', en:'to buy', conj:'er kauft'}, {de:'verpassen', en:'to miss', conj:'er verpasst'}], adjs: [{de:'günstig', en:'cheap'}, {de:'spät', en:'late'}], sentences: [{de:'Er kauft eine günstige Fahrkarte.', en:'He buys a cheap ticket.'}, {de:'Er verpasst den Zug weil er zu spät ist.', en:'He misses the train because he is too late.'}] },
+    { nouns: [{de:'das Café', en:'the café', note:'neuter'}, {de:'der Kaffee', en:'the coffee', note:'masculine'}, {de:'der Kuchen', en:'the cake', note:'masculine'}], verbs: [{de:'sitzen', en:'to sit', conj:'er sitzt'}, {de:'genießen', en:'to enjoy', conj:'er genießt'}], adjs: [{de:'gemütlich', en:'cosy'}, {de:'süß', en:'sweet'}], sentences: [{de:'Er sitzt in einem gemütlichen Café.', en:'He sits in a cosy café.'}, {de:'Er genießt den süßen Kuchen mit Kaffee.', en:'He enjoys the sweet cake with coffee.'}] },
+    { nouns: [{de:'der Supermarkt', en:'the supermarket', note:'masculine'}, {de:'das Regal', en:'the shelf', note:'neuter'}, {de:'die Tüte', en:'the bag', note:'feminine'}], verbs: [{de:'einkaufen', en:'to shop', conj:'er kauft ein'}, {de:'vergleichen', en:'to compare', conj:'er vergleicht'}], adjs: [{de:'voll', en:'full'}, {de:'billig', en:'cheap'}], sentences: [{de:'Er kauft im vollen Supermarkt ein.', en:'He shops in the full supermarket.'}, {de:'Er vergleicht die Preise im Regal.', en:'He compares the prices on the shelf.'}] },
+    { nouns: [{de:'die Wohnung', en:'the flat', note:'feminine'}, {de:'die Miete', en:'the rent', note:'feminine'}, {de:'der Vermieter', en:'the landlord', note:'masculine'}], verbs: [{de:'mieten', en:'to rent', conj:'er mietet'}, {de:'einziehen', en:'to move in', conj:'er zieht ein'}], adjs: [{de:'teuer', en:'expensive'}, {de:'modern', en:'modern'}], sentences: [{de:'Er mietet eine moderne Wohnung.', en:'He rents a modern flat.'}, {de:'Die Miete ist leider sehr teuer.', en:'The rent is unfortunately very expensive.'}] },
+    { nouns: [{de:'der Arzt', en:'the doctor', note:'masculine'}, {de:'die Apotheke', en:'the pharmacy', note:'feminine'}, {de:'das Rezept', en:'the prescription', note:'neuter'}], verbs: [{de:'verschreiben', en:'to prescribe', conj:'er verschreibt'}, {de:'abholen', en:'to pick up', conj:'er holt ab'}], adjs: [{de:'krank', en:'ill'}, {de:'notwendig', en:'necessary'}], sentences: [{de:'Der Arzt verschreibt ein notwendiges Medikament.', en:'The doctor prescribes a necessary medicine.'}, {de:'Er holt das Rezept in der Apotheke ab.', en:'He picks up the prescription at the pharmacy.'}] },
+    { nouns: [{de:'das Wochenende', en:'the weekend', note:'neuter'}, {de:'der Park', en:'the park', note:'masculine'}, {de:'das Picknick', en:'the picnic', note:'neuter'}], verbs: [{de:'erholen', en:'to relax', conj:'er erholt sich'}, {de:'spazieren gehen', en:'to go for a walk', conj:'er geht spazieren'}], adjs: [{de:'sonnig', en:'sunny'}, {de:'entspannt', en:'relaxed'}], sentences: [{de:'Er erholt sich an einem sonnigen Wochenende.', en:'He relaxes on a sunny weekend.'}, {de:'Sie gehen entspannt im Park spazieren.', en:'They go for a relaxed walk in the park.'}] },
+    { nouns: [{de:'die Schule', en:'the school', note:'feminine'}, {de:'der Lehrer', en:'the teacher', note:'masculine'}, {de:'die Hausaufgabe', en:'the homework', note:'feminine'}], verbs: [{de:'erklären', en:'to explain', conj:'er erklärt'}, {de:'vergessen', en:'to forget', conj:'er vergisst'}], adjs: [{de:'schwierig', en:'difficult'}, {de:'geduldig', en:'patient'}], sentences: [{de:'Der geduldige Lehrer erklärt die schwierige Aufgabe.', en:'The patient teacher explains the difficult task.'}, {de:'Er vergisst manchmal seine Hausaufgaben.', en:'He sometimes forgets his homework.'}] },
+    { nouns: [{de:'das Büro', en:'the office', note:'neuter'}, {de:'der Kollege', en:'the colleague', note:'masculine'}, {de:'die Besprechung', en:'the meeting', note:'feminine'}], verbs: [{de:'besprechen', en:'to discuss', conj:'er bespricht'}, {de:'vorbereiten', en:'to prepare', conj:'er bereitet vor'}], adjs: [{de:'wichtig', en:'important'}, {de:'lang', en:'long'}], sentences: [{de:'Er bereitet die wichtige Besprechung vor.', en:'He prepares the important meeting.'}, {de:'Die Kollegen besprechen die langen Pläne.', en:'The colleagues discuss the long plans.'}] },
+    { nouns: [{de:'die Bank', en:'the bank', note:'feminine'}, {de:'das Konto', en:'the account', note:'neuter'}, {de:'die Überweisung', en:'the transfer', note:'feminine'}], verbs: [{de:'überweisen', en:'to transfer', conj:'er überweist'}, {de:'abheben', en:'to withdraw', conj:'er hebt ab'}], adjs: [{de:'kostenlos', en:'free of charge'}, {de:'schnell', en:'quick'}], sentences: [{de:'Er überweist Geld auf das Konto.', en:'He transfers money to the account.'}, {de:'Die Überweisung geht schnell durch.', en:'The transfer goes through quickly.'}] },
+    { nouns: [{de:'das Fest', en:'the party', note:'neuter'}, {de:'die Einladung', en:'the invitation', note:'feminine'}, {de:'das Geschenk', en:'the gift', note:'neuter'}], verbs: [{de:'einladen', en:'to invite', conj:'er lädt ein'}, {de:'feiern', en:'to celebrate', conj:'er feiert'}], adjs: [{de:'fröhlich', en:'cheerful'}, {de:'überrascht', en:'surprised'}], sentences: [{de:'Er lädt seine Freunde zum fröhlichen Fest ein.', en:'He invites his friends to the cheerful party.'}, {de:'Sie ist überrascht von dem schönen Geschenk.', en:'She is surprised by the beautiful gift.'}] },
+    { nouns: [{de:'der Sport', en:'the sport', note:'masculine'}, {de:'das Stadion', en:'the stadium', note:'neuter'}, {de:'die Mannschaft', en:'the team', note:'feminine'}], verbs: [{de:'gewinnen', en:'to win', conj:'er gewinnt'}, {de:'anfeuern', en:'to cheer on', conj:'er feuert an'}], adjs: [{de:'aufgeregt', en:'excited'}, {de:'stark', en:'strong'}], sentences: [{de:'Die starke Mannschaft gewinnt das Spiel.', en:'The strong team wins the game.'}, {de:'Die aufgeregte Menge feuert sie an.', en:'The excited crowd cheers them on.'}] },
+    { nouns: [{de:'das Konzert', en:'the concert', note:'neuter'}, {de:'der Sänger', en:'the singer', note:'masculine'}, {de:'die Bühne', en:'the stage', note:'feminine'}], verbs: [{de:'auftreten', en:'to perform', conj:'er tritt auf'}, {de:'klatschen', en:'to clap', conj:'er klatscht'}], adjs: [{de:'begeistert', en:'enthusiastic'}, {de:'laut', en:'loud'}], sentences: [{de:'Der Sänger tritt auf der Bühne auf.', en:'The singer performs on the stage.'}, {de:'Das begeisterte Publikum klatscht laut.', en:'The enthusiastic audience claps loudly.'}] },
+    { nouns: [{de:'der Regen', en:'the rain', note:'masculine'}, {de:'der Regenschirm', en:'the umbrella', note:'masculine'}, {de:'die Pfütze', en:'the puddle', note:'feminine'}], verbs: [{de:'regnen', en:'to rain', conj:'es regnet'}, {de:'vergessen', en:'to forget', conj:'er vergisst'}], adjs: [{de:'nass', en:'wet'}, {de:'grau', en:'grey'}], sentences: [{de:'Es regnet und der Himmel ist grau.', en:'It rains and the sky is grey.'}, {de:'Er vergisst seinen Regenschirm und wird nass.', en:'He forgets his umbrella and gets wet.'}] },
+    { nouns: [{de:'die Zeitung', en:'the newspaper', note:'feminine'}, {de:'der Artikel', en:'the article', note:'masculine'}, {de:'die Nachricht', en:'the news', note:'feminine'}], verbs: [{de:'lesen', en:'to read', conj:'er liest'}, {de:'berichten', en:'to report', conj:'er berichtet'}], adjs: [{de:'aktuell', en:'current'}, {de:'interessant', en:'interesting'}], sentences: [{de:'Er liest einen interessanten Artikel in der Zeitung.', en:'He reads an interesting article in the newspaper.'}, {de:'Die Zeitung berichtet über aktuelle Nachrichten.', en:'The newspaper reports on current news.'}] },
+    { nouns: [{de:'der Sitzplatz', en:'the seat', note:'masculine'}, {de:'der Zug', en:'the train', note:'masculine'}, {de:'das Abteil', en:'the compartment', note:'neuter'}], verbs: [{de:'reservieren', en:'to reserve', conj:'er reserviert'}, {de:'einsteigen', en:'to board', conj:'er steigt ein'}], adjs: [{de:'bequem', en:'comfortable'}, {de:'ruhig', en:'quiet'}], sentences: [{de:'Er reserviert einen bequemen Sitzplatz.', en:'He reserves a comfortable seat.'}, {de:'Das Abteil ist ruhig und leer.', en:'The compartment is quiet and empty.'}] },
+    { nouns: [{de:'die Küste', en:'the coast', note:'feminine'}, {de:'der Strand', en:'the beach', note:'masculine'}, {de:'die Welle', en:'the wave', note:'feminine'}], verbs: [{de:'schwimmen', en:'to swim', conj:'er schwimmt'}, {de:'liegen', en:'to lie', conj:'er liegt'}], adjs: [{de:'warm', en:'warm'}, {de:'herrlich', en:'gorgeous'}], sentences: [{de:'Er liegt am herrlichen Strand.', en:'He lies on the gorgeous beach.'}, {de:'Die Wellen sind warm und einladend.', en:'The waves are warm and inviting.'}] },
+    { nouns: [{de:'das Rezept', en:'the recipe', note:'neuter'}, {de:'die Zutat', en:'the ingredient', note:'feminine'}, {de:'der Topf', en:'the pot', note:'masculine'}], verbs: [{de:'kochen', en:'to cook', conj:'er kocht'}, {de:'mischen', en:'to mix', conj:'er mischt'}], adjs: [{de:'frisch', en:'fresh'}, {de:'aromatisch', en:'aromatic'}], sentences: [{de:'Er kocht nach einem alten Rezept.', en:'He cooks from an old recipe.'}, {de:'Er mischt frische Zutaten im Topf.', en:'He mixes fresh ingredients in the pot.'}] },
+    { nouns: [{de:'der Geburtstag', en:'the birthday', note:'masculine'}, {de:'die Torte', en:'the cake', note:'feminine'}, {de:'die Kerze', en:'the candle', note:'feminine'}], verbs: [{de:'feiern', en:'to celebrate', conj:'er feiert'}, {de:'ausblasen', en:'to blow out', conj:'er bläst aus'}], adjs: [{de:'glücklich', en:'happy'}, {de:'bunt', en:'colourful'}], sentences: [{de:'Er feiert seinen glücklichen Geburtstag.', en:'He celebrates his happy birthday.'}, {de:'Er bläst die bunten Kerzen auf der Torte aus.', en:'He blows out the colourful candles on the cake.'}] },
+    { nouns: [{de:'die Bibliothek', en:'the library', note:'feminine'}, {de:'das Regal', en:'the shelf', note:'neuter'}, {de:'der Ausweis', en:'the ID card', note:'masculine'}], verbs: [{de:'ausleihen', en:'to borrow', conj:'er leiht aus'}, {de:'zurückbringen', en:'to return', conj:'er bringt zurück'}], adjs: [{de:'ruhig', en:'quiet'}, {de:'kostenlos', en:'free'}], sentences: [{de:'Er leiht ein Buch in der ruhigen Bibliothek aus.', en:'He borrows a book from the quiet library.'}, {de:'Er bringt das Buch kostenlos zurück.', en:'He returns the book free of charge.'}] },
+    { nouns: [{de:'die Kreuzung', en:'the crossroads', note:'feminine'}, {de:'die Ampel', en:'the traffic light', note:'feminine'}, {de:'der Fußgänger', en:'the pedestrian', note:'masculine'}], verbs: [{de:'überqueren', en:'to cross', conj:'er überquert'}, {de:'warten', en:'to wait', conj:'er wartet'}], adjs: [{de:'gefährlich', en:'dangerous'}, {de:'geduldig', en:'patient'}], sentences: [{de:'Der Fußgänger wartet geduldig an der Ampel.', en:'The pedestrian waits patiently at the traffic light.'}, {de:'Er überquert die gefährliche Kreuzung vorsichtig.', en:'He crosses the dangerous crossroads carefully.'}] },
+  ],
+  // B1: 4 nouns, 3 verbs, 3 adj, 2 sentences
+  B1: [
+    { nouns: [{de:'die Erfahrung', en:'the experience', note:'feminine'}, {de:'die Herausforderung', en:'the challenge', note:'feminine'}, {de:'die Fähigkeit', en:'the skill', note:'feminine'}, {de:'der Erfolg', en:'the success', note:'masculine'}], verbs: [{de:'überwinden', en:'to overcome', conj:'er überwindet'}, {de:'entwickeln', en:'to develop', conj:'er entwickelt'}, {de:'erreichen', en:'to achieve', conj:'er erreicht'}], adjs: [{de:'mutig', en:'courageous'}, {de:'wertvoll', en:'valuable'}, {de:'ehrgeizig', en:'ambitious'}], sentences: [{de:'Sie überwindet mutig jede Herausforderung und entwickelt wertvolle Fähigkeiten.', en:'She courageously overcomes every challenge and develops valuable skills.'}, {de:'Der ehrgeizige Mann erreicht großen Erfolg durch seine Erfahrung.', en:'The ambitious man achieves great success through his experience.'}] },
+    { nouns: [{de:'die Meinung', en:'the opinion', note:'feminine'}, {de:'der Standpunkt', en:'the viewpoint', note:'masculine'}, {de:'das Argument', en:'the argument', note:'neuter'}, {de:'die Diskussion', en:'the discussion', note:'feminine'}], verbs: [{de:'diskutieren', en:'to discuss', conj:'er diskutiert'}, {de:'überzeugen', en:'to convince', conj:'er überzeugt'}, {de:'vertreten', en:'to represent', conj:'er vertritt'}], adjs: [{de:'unterschiedlich', en:'different'}, {de:'überzeugend', en:'convincing'}, {de:'sachlich', en:'objective'}], sentences: [{de:'Er vertritt seinen Standpunkt mit überzeugenden Argumenten.', en:'He represents his viewpoint with convincing arguments.'}, {de:'In der sachlichen Diskussion werden unterschiedliche Meinungen ausgetauscht.', en:'In the objective discussion different opinions are exchanged.'}] },
+    { nouns: [{de:'die Entscheidung', en:'the decision', note:'feminine'}, {de:'die Folge', en:'the consequence', note:'feminine'}, {de:'die Verantwortung', en:'the responsibility', note:'feminine'}, {de:'der Kompromiss', en:'the compromise', note:'masculine'}], verbs: [{de:'abwägen', en:'to weigh up', conj:'er wägt ab'}, {de:'übernehmen', en:'to take on', conj:'er übernimmt'}, {de:'treffen', en:'to make a decision', conj:'er trifft'}], adjs: [{de:'schwierig', en:'difficult'}, {de:'verantwortungsbewusst', en:'responsible'}, {de:'reif', en:'mature'}], sentences: [{de:'Er trifft schwierige Entscheidungen verantwortungsbewusst.', en:'He makes difficult decisions responsibly.'}, {de:'Ein reifer Kompromiss hilft negative Folgen zu vermeiden.', en:'A mature compromise helps to avoid negative consequences.'}] },
+    { nouns: [{de:'die Umwelt', en:'the environment', note:'feminine'}, {de:'die Ressource', en:'the resource', note:'feminine'}, {de:'der Verbrauch', en:'the consumption', note:'masculine'}, {de:'die Lösung', en:'the solution', note:'feminine'}], verbs: [{de:'schützen', en:'to protect', conj:'er schützt'}, {de:'verbrauchen', en:'to consume', conj:'er verbraucht'}, {de:'vorschlagen', en:'to suggest', conj:'er schlägt vor'}], adjs: [{de:'nachhaltig', en:'sustainable'}, {de:'knapp', en:'scarce'}, {de:'dringend', en:'urgent'}], sentences: [{de:'Er schlägt nachhaltige Lösungen zum Schutz der Umwelt vor.', en:'He suggests sustainable solutions to protect the environment.'}, {de:'Der dringende Verbrauch knapper Ressourcen muss gestoppt werden.', en:'The urgent consumption of scarce resources must be stopped.'}] },
+    { nouns: [{de:'die Gesellschaft', en:'society', note:'feminine'}, {de:'der Bürger', en:'the citizen', note:'masculine'}, {de:'das Recht', en:'the right', note:'neuter'}, {de:'die Pflicht', en:'the duty', note:'feminine'}], verbs: [{de:'teilnehmen', en:'to participate', conj:'er nimmt teil'}, {de:'einhalten', en:'to abide by', conj:'er hält ein'}, {de:'fördern', en:'to promote', conj:'er fördert'}], adjs: [{de:'demokratisch', en:'democratic'}, {de:'gleichberechtigt', en:'equal'}, {de:'aktiv', en:'active'}], sentences: [{de:'In einer demokratischen Gesellschaft hat jeder Bürger Rechte und Pflichten.', en:'In a democratic society every citizen has rights and duties.'}, {de:'Aktive Bürger fördern gleichberechtigte Teilnahme am öffentlichen Leben.', en:'Active citizens promote equal participation in public life.'}] },
+    { nouns: [{de:'die Technologie', en:'technology', note:'feminine'}, {de:'die Entwicklung', en:'the development', note:'feminine'}, {de:'der Fortschritt', en:'progress', note:'masculine'}, {de:'der Nachteil', en:'the disadvantage', note:'masculine'}], verbs: [{de:'verbessern', en:'to improve', conj:'er verbessert'}, {de:'abhängen', en:'to depend', conj:'es hängt ab'}, {de:'einsetzen', en:'to deploy', conj:'er setzt ein'}], adjs: [{de:'innovativ', en:'innovative'}, {de:'schnell', en:'rapid'}, {de:'kritisch', en:'critical'}], sentences: [{de:'Die schnelle technologische Entwicklung verbessert das Leben vieler Menschen.', en:'The rapid technological development improves the lives of many people.'}, {de:'Kritische Stimmen weisen auf die Nachteile des innovativen Fortschritts hin.', en:'Critical voices point out the disadvantages of innovative progress.'}] },
+    { nouns: [{de:'die Gesundheit', en:'health', note:'feminine'}, {de:'die Ernährung', en:'nutrition', note:'feminine'}, {de:'die Bewegung', en:'exercise', note:'feminine'}, {de:'das Wohlbefinden', en:'wellbeing', note:'neuter'}], verbs: [{de:'achten', en:'to pay attention to', conj:'er achtet'}, {de:'vermeiden', en:'to avoid', conj:'er vermeidet'}, {de:'steigern', en:'to increase', conj:'er steigert'}], adjs: [{de:'gesund', en:'healthy'}, {de:'ausgewogen', en:'balanced'}, {de:'regelmäßig', en:'regular'}], sentences: [{de:'Er achtet auf eine ausgewogene Ernährung und regelmäßige Bewegung.', en:'He pays attention to a balanced diet and regular exercise.'}, {de:'Gesunde Gewohnheiten steigern das allgemeine Wohlbefinden erheblich.', en:'Healthy habits significantly increase general wellbeing.'}] },
+    { nouns: [{de:'der Beruf', en:'the profession', note:'masculine'}, {de:'die Ausbildung', en:'the training', note:'feminine'}, {de:'der Arbeitsmarkt', en:'the job market', note:'masculine'}, {de:'die Bewerbung', en:'the job application', note:'feminine'}], verbs: [{de:'bewerben', en:'to apply', conj:'er bewirbt sich'}, {de:'ausbilden', en:'to train', conj:'er bildet aus'}, {de:'konkurrieren', en:'to compete', conj:'er konkurriert'}], adjs: [{de:'qualifiziert', en:'qualified'}, {de:'wettbewerbsfähig', en:'competitive'}, {de:'erfahren', en:'experienced'}], sentences: [{de:'Der qualifizierte Bewerber bewirbt sich auf dem wettbewerbsfähigen Arbeitsmarkt.', en:'The qualified applicant applies on the competitive job market.'}, {de:'Eine solide Ausbildung macht einen erfahrenen und gefragten Fachmann.', en:'A solid training makes an experienced and sought-after professional.'}] },
+    { nouns: [{de:'die Kultur', en:'culture', note:'feminine'}, {de:'die Tradition', en:'the tradition', note:'feminine'}, {de:'der Brauch', en:'the custom', note:'masculine'}, {de:'das Erbe', en:'heritage', note:'neuter'}], verbs: [{de:'bewahren', en:'to preserve', conj:'er bewahrt'}, {de:'weitergeben', en:'to pass on', conj:'er gibt weiter'}, {de:'pflegen', en:'to maintain', conj:'er pflegt'}], adjs: [{de:'vielfältig', en:'diverse'}, {de:'lebendig', en:'vibrant'}, {de:'bedeutend', en:'significant'}], sentences: [{de:'Er pflegt lebendige Traditionen und bewahrt das bedeutende kulturelle Erbe.', en:'He maintains vibrant traditions and preserves the significant cultural heritage.'}, {de:'Vielfältige Bräuche werden von Generation zu Generation weitergegeben.', en:'Diverse customs are passed on from generation to generation.'}] },
+    { nouns: [{de:'der Reisepass', en:'the passport', note:'masculine'}, {de:'der Grenzübergang', en:'the border crossing', note:'masculine'}, {de:'die Zollkontrolle', en:'the customs check', note:'feminine'}, {de:'die Einreise', en:'entry into a country', note:'feminine'}], verbs: [{de:'kontrollieren', en:'to check', conj:'er kontrolliert'}, {de:'vorzeigen', en:'to present', conj:'er zeigt vor'}, {de:'einreisen', en:'to enter a country', conj:'er reist ein'}], adjs: [{de:'gültig', en:'valid'}, {de:'streng', en:'strict'}, {de:'problemlos', en:'smooth'}], sentences: [{de:'Er zeigt seinen gültigen Reisepass an der strengen Zollkontrolle vor.', en:'He presents his valid passport at the strict customs check.'}, {de:'Mit den richtigen Dokumenten reist man problemlos ein.', en:'With the right documents one enters the country smoothly.'}] },
+    { nouns: [{de:'die Sprache', en:'language', note:'feminine'}, {de:'der Dialekt', en:'the dialect', note:'masculine'}, {de:'der Akzent', en:'the accent', note:'masculine'}, {de:'das Missverständnis', en:'the misunderstanding', note:'neuter'}], verbs: [{de:'verstehen', en:'to understand', conj:'er versteht'}, {de:'verwechseln', en:'to mix up', conj:'er verwechselt'}, {de:'klären', en:'to clarify', conj:'er klärt'}], adjs: [{de:'deutlich', en:'clear'}, {de:'regional', en:'regional'}, {de:'kompliziert', en:'complicated'}], sentences: [{de:'Er klärt das komplizierte Missverständnis deutlich und geduldig.', en:'He clarifies the complicated misunderstanding clearly and patiently.'}, {de:'Regionale Dialekte und Akzente können die Sprache schwer verständlich machen.', en:'Regional dialects and accents can make the language hard to understand.'}] },
+    { nouns: [{de:'das Unternehmen', en:'the company', note:'neuter'}, {de:'der Markt', en:'the market', note:'masculine'}, {de:'der Gewinn', en:'the profit', note:'masculine'}, {de:'die Wirtschaft', en:'the economy', note:'feminine'}], verbs: [{de:'wachsen', en:'to grow', conj:'es wächst'}, {de:'investieren', en:'to invest', conj:'er investiert'}, {de:'konkurrieren', en:'to compete', conj:'er konkurriert'}], adjs: [{de:'global', en:'global'}, {de:'stabil', en:'stable'}, {de:'profitabel', en:'profitable'}], sentences: [{de:'Das profitable Unternehmen investiert in globale Märkte.', en:'The profitable company invests in global markets.'}, {de:'Eine stabile Wirtschaft wächst langsam aber sicher.', en:'A stable economy grows slowly but surely.'}] },
+    { nouns: [{de:'die Bildung', en:'education', note:'feminine'}, {de:'das Wissen', en:'knowledge', note:'neuter'}, {de:'die Kompetenz', en:'competence', note:'feminine'}, {de:'der Abschluss', en:'the qualification', note:'masculine'}], verbs: [{de:'erwerben', en:'to acquire', conj:'er erwirbt'}, {de:'anwenden', en:'to apply', conj:'er wendet an'}, {de:'verbessern', en:'to improve', conj:'er verbessert'}], adjs: [{de:'fundiert', en:'thorough'}, {de:'praktisch', en:'practical'}, {de:'lebenslang', en:'lifelong'}], sentences: [{de:'Er erwirbt fundiertes Wissen und praktische Kompetenzen durch seine Bildung.', en:'He acquires thorough knowledge and practical competences through his education.'}, {de:'Lebenslanges Lernen verbessert den beruflichen Abschluss erheblich.', en:'Lifelong learning considerably improves professional qualifications.'}] },
+    { nouns: [{de:'die Nachbarschaft', en:'the neighbourhood', note:'feminine'}, {de:'der Konflikt', en:'the conflict', note:'masculine'}, {de:'die Zusammenarbeit', en:'cooperation', note:'feminine'}, {de:'das Vertrauen', en:'trust', note:'neuter'}], verbs: [{de:'lösen', en:'to resolve', conj:'er löst'}, {de:'aufbauen', en:'to build up', conj:'er baut auf'}, {de:'stören', en:'to disturb', conj:'er stört'}], adjs: [{de:'friedlich', en:'peaceful'}, {de:'gegenseitig', en:'mutual'}, {de:'angespannt', en:'tense'}], sentences: [{de:'In einer friedlichen Nachbarschaft löst man Konflikte durch gegenseitiges Vertrauen.', en:'In a peaceful neighbourhood conflicts are resolved through mutual trust.'}, {de:'Gute Zusammenarbeit baut gegenseitiges Vertrauen auf auch wenn es angespannt war.', en:'Good cooperation builds mutual trust even when it was tense.'}] },
+    { nouns: [{de:'der Journalist', en:'the journalist', note:'masculine'}, {de:'die Berichterstattung', en:'reporting', note:'feminine'}, {de:'die Presse', en:'the press', note:'feminine'}, {de:'die Wahrheit', en:'truth', note:'feminine'}], verbs: [{de:'recherchieren', en:'to research', conj:'er recherchiert'}, {de:'veröffentlichen', en:'to publish', conj:'er veröffentlicht'}, {de:'hinterfragen', en:'to question', conj:'er hinterfragt'}], adjs: [{de:'unabhängig', en:'independent'}, {de:'glaubwürdig', en:'credible'}, {de:'investigativ', en:'investigative'}], sentences: [{de:'Der investigative Journalist recherchiert und veröffentlicht glaubwürdige Berichte.', en:'The investigative journalist researches and publishes credible reports.'}, {de:'Unabhängige Presse hinterfragt die Wahrheit hinter den Ereignissen.', en:'Independent press questions the truth behind events.'}] },
+    { nouns: [{de:'die Energie', en:'energy', note:'feminine'}, {de:'die Quelle', en:'the source', note:'feminine'}, {de:'der Verbrauch', en:'consumption', note:'masculine'}, {de:'die Alternative', en:'the alternative', note:'feminine'}], verbs: [{de:'erzeugen', en:'to generate', conj:'er erzeugt'}, {de:'einsparen', en:'to save', conj:'er spart ein'}, {de:'umsteigen', en:'to switch over', conj:'er steigt um'}], adjs: [{de:'erneuerbar', en:'renewable'}, {de:'effizient', en:'efficient'}, {de:'notwendig', en:'necessary'}], sentences: [{de:'Erneuerbare Energiequellen erzeugen effizienten Strom ohne großen Verbrauch.', en:'Renewable energy sources generate efficient electricity without high consumption.'}, {de:'Es ist notwendig auf alternative Energien umzusteigen und Energie einzusparen.', en:'It is necessary to switch to alternative energies and save energy.'}] },
+    { nouns: [{de:'die Grenze', en:'the border', note:'feminine'}, {de:'die Migration', en:'migration', note:'feminine'}, {de:'die Integration', en:'integration', note:'feminine'}, {de:'die Herkunft', en:'origin', note:'feminine'}], verbs: [{de:'ankommen', en:'to arrive', conj:'er kommt an'}, {de:'integrieren', en:'to integrate', conj:'er integriert'}, {de:'anpassen', en:'to adapt', conj:'er passt sich an'}], adjs: [{de:'vielfältig', en:'diverse'}, {de:'offen', en:'open'}, {de:'erfolgreich', en:'successful'}], sentences: [{de:'Er kommt aus einer anderen Herkunft und integriert sich erfolgreich.', en:'He comes from a different background and integrates successfully.'}, {de:'Eine offene Gesellschaft fördert die vielfältige Migration und Integration.', en:'An open society promotes diverse migration and integration.'}] },
+    { nouns: [{de:'das Gericht', en:'the court', note:'neuter'}, {de:'das Gesetz', en:'the law', note:'neuter'}, {de:'der Richter', en:'the judge', note:'masculine'}, {de:'das Urteil', en:'the verdict', note:'neuter'}], verbs: [{de:'urteilen', en:'to judge', conj:'er urteilt'}, {de:'anklagen', en:'to accuse', conj:'er klagt an'}, {de:'verteidigen', en:'to defend', conj:'er verteidigt'}], adjs: [{de:'gerecht', en:'fair'}, {de:'unabhängig', en:'independent'}, {de:'bindend', en:'binding'}], sentences: [{de:'Das unabhängige Gericht urteilt gerecht nach dem geltenden Gesetz.', en:'The independent court judges fairly according to the applicable law.'}, {de:'Der Richter fällt ein bindendes Urteil nach sorgfältiger Prüfung.', en:'The judge delivers a binding verdict after careful examination.'}] },
+    { nouns: [{de:'das Projekt', en:'the project', note:'neuter'}, {de:'die Frist', en:'the deadline', note:'feminine'}, {de:'das Team', en:'the team', note:'neuter'}, {de:'das Ergebnis', en:'the result', note:'neuter'}], verbs: [{de:'einhalten', en:'to meet a deadline', conj:'er hält ein'}, {de:'koordinieren', en:'to coordinate', conj:'er koordiniert'}, {de:'präsentieren', en:'to present', conj:'er präsentiert'}], adjs: [{de:'termingerecht', en:'on schedule'}, {de:'kreativ', en:'creative'}, {de:'überzeugend', en:'convincing'}], sentences: [{de:'Das kreative Team koordiniert das Projekt und hält die Fristen ein.', en:'The creative team coordinates the project and meets the deadlines.'}, {de:'Sie präsentieren ein überzeugendes Ergebnis pünktlich und termingerecht.', en:'They present a convincing result punctually and on schedule.'}] },
+    { nouns: [{de:'die Forschung', en:'research', note:'feminine'}, {de:'das Experiment', en:'the experiment', note:'neuter'}, {de:'die Hypothese', en:'the hypothesis', note:'feminine'}, {de:'der Beweis', en:'the proof', note:'masculine'}], verbs: [{de:'durchführen', en:'to carry out', conj:'er führt durch'}, {de:'beweisen', en:'to prove', conj:'er beweist'}, {de:'widerlegen', en:'to disprove', conj:'er widerlegt'}], adjs: [{de:'wissenschaftlich', en:'scientific'}, {de:'präzise', en:'precise'}, {de:'bahnbrechend', en:'groundbreaking'}], sentences: [{de:'Die Forscher führen ein präzises wissenschaftliches Experiment durch.', en:'The researchers carry out a precise scientific experiment.'}, {de:'Das bahnbrechende Ergebnis beweist die ursprüngliche Hypothese eindeutig.', en:'The groundbreaking result clearly proves the original hypothesis.'}] },
+    { nouns: [{de:'die Kunst', en:'art', note:'feminine'}, {de:'das Werk', en:'the work', note:'neuter'}, {de:'der Künstler', en:'the artist', note:'masculine'}, {de:'die Ausstellung', en:'the exhibition', note:'feminine'}], verbs: [{de:'ausstellen', en:'to exhibit', conj:'er stellt aus'}, {de:'bewundern', en:'to admire', conj:'er bewundert'}, {de:'interpretieren', en:'to interpret', conj:'er interpretiert'}], adjs: [{de:'eindrucksvoll', en:'impressive'}, {de:'kreativ', en:'creative'}, {de:'zeitgenössisch', en:'contemporary'}], sentences: [{de:'Der kreative Künstler stellt seine eindrucksvollen Werke in der Ausstellung aus.', en:'The creative artist exhibits his impressive works in the exhibition.'}, {de:'Die Besucher bewundern und interpretieren die zeitgenössische Kunst.', en:'The visitors admire and interpret the contemporary art.'}] },
+    { nouns: [{de:'das Tagebuch', en:'the diary', note:'neuter'}, {de:'die Erinnerung', en:'the memory', note:'feminine'}, {de:'das Foto', en:'the photo', note:'neuter'}, {de:'die Reise', en:'the journey', note:'feminine'}], verbs: [{de:'aufschreiben', en:'to write down', conj:'er schreibt auf'}, {de:'festhalten', en:'to capture', conj:'er hält fest'}, {de:'teilen', en:'to share', conj:'er teilt'}], adjs: [{de:'unvergesslich', en:'unforgettable'}, {de:'persönlich', en:'personal'}, {de:'lebendig', en:'vivid'}], sentences: [{de:'Er hält unvergessliche Erinnerungen in einem persönlichen Tagebuch fest.', en:'He captures unforgettable memories in a personal diary.'}, {de:'Er teilt lebendige Fotos von seiner Reise.', en:'He shares vivid photos from his journey.'}] },
+    { nouns: [{de:'der Redner', en:'the speaker', note:'masculine'}, {de:'das Publikum', en:'the audience', note:'neuter'}, {de:'der Beifall', en:'applause', note:'masculine'}, {de:'die Veranstaltung', en:'the event', note:'feminine'}], verbs: [{de:'halten', en:'to give a speech', conj:'er hält'}, {de:'begeistern', en:'to enthuse', conj:'er begeistert'}, {de:'applaudieren', en:'to applaud', conj:'er applaudiert'}], adjs: [{de:'mitreißend', en:'captivating'}, {de:'aufmerksam', en:'attentive'}, {de:'leidenschaftlich', en:'passionate'}], sentences: [{de:'Der leidenschaftliche Redner hält eine mitreißende Rede vor dem aufmerksamen Publikum.', en:'The passionate speaker gives a captivating speech before the attentive audience.'}, {de:'Das Publikum begeistert sich und applaudiert mit starkem Beifall.', en:'The audience enthuses and applauds with strong applause.'}] },
+    { nouns: [{de:'der Klimawandel', en:'climate change', note:'masculine'}, {de:'die Temperatur', en:'temperature', note:'feminine'}, {de:'der Gletscher', en:'the glacier', note:'masculine'}, {de:'die Folge', en:'the consequence', note:'feminine'}], verbs: [{de:'schmelzen', en:'to melt', conj:'er schmilzt'}, {de:'warnen', en:'to warn', conj:'er warnt'}, {de:'handeln', en:'to act', conj:'er handelt'}], adjs: [{de:'besorgniserregend', en:'alarming'}, {de:'unaufhaltsam', en:'unstoppable'}, {de:'dringend', en:'urgent'}], sentences: [{de:'Die besorgniserregenden Temperaturen lassen Gletscher unaufhaltsam schmelzen.', en:'The alarming temperatures make glaciers melt unstoppably.'}, {de:'Wissenschaftler warnen vor dringenden Folgen des Klimawandels und fordern Handeln.', en:'Scientists warn of urgent consequences of climate change and demand action.'}] },
+  ],
+  // B2: 5 nouns, 4 verbs, 4 adj, 2 sentences
+  B2: [
+    { nouns: [{de:'die Wahrnehmung', en:'perception', note:'feminine'}, {de:'das Bewusstsein', en:'consciousness', note:'neuter'}, {de:'die Erkenntnis', en:'insight', note:'feminine'}, {de:'der Trugschluss', en:'fallacy', note:'masculine'}, {de:'die Reflexion', en:'reflection', note:'feminine'}], verbs: [{de:'wahrnehmen', en:'to perceive', conj:'er nimmt wahr'}, {de:'hinterfragen', en:'to question', conj:'er hinterfragt'}, {de:'erkennen', en:'to recognise', conj:'er erkennt'}, {de:'reflektieren', en:'to reflect', conj:'er reflektiert'}], adjs: [{de:'tiefgründig', en:'profound'}, {de:'trügerisch', en:'deceptive'}, {de:'scharf', en:'acute'}, {de:'subjektiv', en:'subjective'}], sentences: [{de:'Das tiefgründige Bewusstsein nimmt selbst trügerische Trugschlüsse wahr und hinterfragt sie.', en:'Profound consciousness perceives even deceptive fallacies and questions them.'}, {de:'Durch scharfe Reflexion erkennt man subjektive Wahrnehmungen als solche.', en:'Through acute reflection one recognises subjective perceptions as such.'}] },
+    { nouns: [{de:'die Nachhaltigkeit', en:'sustainability', note:'feminine'}, {de:'der Klimawandel', en:'climate change', note:'masculine'}, {de:'das Ökosystem', en:'ecosystem', note:'neuter'}, {de:'die Ressourcenknappheit', en:'resource scarcity', note:'feminine'}, {de:'der Wandel', en:'transformation', note:'masculine'}], verbs: [{de:'berücksichtigen', en:'to take into account', conj:'er berücksichtigt'}, {de:'gefährden', en:'to endanger', conj:'er gefährdet'}, {de:'einleiten', en:'to initiate', conj:'er leitet ein'}, {de:'bewältigen', en:'to cope with', conj:'er bewältigt'}], adjs: [{de:'dringend', en:'urgent'}, {de:'systemisch', en:'systemic'}, {de:'irreversibel', en:'irreversible'}, {de:'weitreichend', en:'far-reaching'}], sentences: [{de:'Die weitreichenden Folgen des Klimawandels gefährden Ökosysteme auf irreversible Weise.', en:'The far-reaching consequences of climate change endanger ecosystems in an irreversible way.'}, {de:'Dringend notwendige systemische Maßnahmen müssen eingeleitet werden um Ressourcenknappheit zu bewältigen.', en:'Urgently necessary systemic measures must be initiated to cope with resource scarcity.'}] },
+    { nouns: [{de:'die Globalisierung', en:'globalisation', note:'feminine'}, {de:'die Interdependenz', en:'interdependence', note:'feminine'}, {de:'der Nationalismus', en:'nationalism', note:'masculine'}, {de:'die Souveränität', en:'sovereignty', note:'feminine'}, {de:'die Verflechtung', en:'entanglement', note:'feminine'}], verbs: [{de:'vorantreiben', en:'to drive forward', conj:'er treibt voran'}, {de:'untergraben', en:'to undermine', conj:'er untergräbt'}, {de:'ausbalancieren', en:'to balance', conj:'er balanciert aus'}, {de:'verhandeln', en:'to negotiate', conj:'er verhandelt'}], adjs: [{de:'vielschichtig', en:'multi-layered'}, {de:'widersprüchlich', en:'contradictory'}, {de:'untrennbar', en:'inseparable'}, {de:'komplex', en:'complex'}], sentences: [{de:'Die vielschichtige Globalisierung treibt wirtschaftliche Interdependenz voran und untergräbt gleichzeitig nationale Souveränität.', en:'Multi-layered globalisation drives economic interdependence forward and simultaneously undermines national sovereignty.'}, {de:'Komplexe Verflechtungen zwischen Nationalismus und globalen Interessen müssen ausbalanciert und verhandelt werden.', en:'Complex entanglements between nationalism and global interests must be balanced and negotiated.'}] },
+    { nouns: [{de:'der Diskurs', en:'discourse', note:'masculine'}, {de:'die Rhetorik', en:'rhetoric', note:'feminine'}, {de:'die Manipulation', en:'manipulation', note:'feminine'}, {de:'das Narrativ', en:'narrative', note:'neuter'}, {de:'die Überzeugungskraft', en:'persuasive power', note:'feminine'}], verbs: [{de:'manipulieren', en:'to manipulate', conj:'er manipuliert'}, {de:'analysieren', en:'to analyse', conj:'er analysiert'}, {de:'dekonstruieren', en:'to deconstruct', conj:'er dekonstruiert'}, {de:'durchschauen', en:'to see through', conj:'er durchschaut'}], adjs: [{de:'subtil', en:'subtle'}, {de:'irreführend', en:'misleading'}, {de:'wirkungsvoll', en:'effective'}, {de:'kritisch', en:'critical'}], sentences: [{de:'Subtile Rhetorik manipuliert öffentliche Diskurse und formt wirkungsvolle Narrative.', en:'Subtle rhetoric manipulates public discourses and shapes effective narratives.'}, {de:'Kritisches Analysieren hilft irreführende Manipulation zu dekonstruieren und zu durchschauen.', en:'Critical analysis helps to deconstruct and see through misleading manipulation.'}] },
+    { nouns: [{de:'die Demokratie', en:'democracy', note:'feminine'}, {de:'die Partizipation', en:'participation', note:'feminine'}, {de:'das Mandat', en:'mandate', note:'neuter'}, {de:'die Legitimität', en:'legitimacy', note:'feminine'}, {de:'der Populismus', en:'populism', note:'masculine'}], verbs: [{de:'legitimieren', en:'to legitimise', conj:'er legitimiert'}, {de:'erodieren', en:'to erode', conj:'es erodiert'}, {de:'stärken', en:'to strengthen', conj:'er stärkt'}, {de:'missbrauchen', en:'to abuse', conj:'er missbraucht'}], adjs: [{de:'fragil', en:'fragile'}, {de:'repräsentativ', en:'representative'}, {de:'populistisch', en:'populist'}, {de:'gefestigt', en:'consolidated'}], sentences: [{de:'Populistischer Missbrauch von Mandaten erodiert die Legitimität einer repräsentativen Demokratie.', en:'Populist abuse of mandates erodes the legitimacy of a representative democracy.'}, {de:'Breite Partizipation stärkt fragile demokratische Strukturen und festigt sie langfristig.', en:'Broad participation strengthens fragile democratic structures and consolidates them in the long term.'}] },
+    { nouns: [{de:'die Psyche', en:'the psyche', note:'feminine'}, {de:'das Unterbewusstsein', en:'the subconscious', note:'neuter'}, {de:'die Resilienz', en:'resilience', note:'feminine'}, {de:'das Trauma', en:'trauma', note:'neuter'}, {de:'der Verdrängungsmechanismus', en:'repression mechanism', note:'masculine'}], verbs: [{de:'verdrängen', en:'to repress', conj:'er verdrängt'}, {de:'verarbeiten', en:'to process', conj:'er verarbeitet'}, {de:'aufarbeiten', en:'to work through', conj:'er arbeitet auf'}, {de:'überwinden', en:'to overcome', conj:'er überwindet'}], adjs: [{de:'tief verwurzelt', en:'deep-rooted'}, {de:'unbewusst', en:'unconscious'}, {de:'heilsam', en:'healing'}, {de:'belastend', en:'burdensome'}], sentences: [{de:'Tief verwurzelte Traumata werden oft unbewusst durch Verdrängungsmechanismen verarbeitet.', en:'Deep-rooted traumas are often unconsciously processed through repression mechanisms.'}, {de:'Heilsame Resilienz hilft belastende Erfahrungen aufzuarbeiten und zu überwinden.', en:'Healing resilience helps to work through and overcome burdensome experiences.'}] },
+    { nouns: [{de:'die Philosophie', en:'philosophy', note:'feminine'}, {de:'das Paradoxon', en:'paradox', note:'neuter'}, {de:'der Determinismus', en:'determinism', note:'masculine'}, {de:'der freie Wille', en:'free will', note:'masculine'}, {de:'die Kontroverse', en:'controversy', note:'feminine'}], verbs: [{de:'postulieren', en:'to postulate', conj:'er postuliert'}, {de:'widersprechen', en:'to contradict', conj:'er widerspricht'}, {de:'abwägen', en:'to weigh up', conj:'er wägt ab'}, {de:'argumentieren', en:'to argue', conj:'er argumentiert'}], adjs: [{de:'unvereinbar', en:'irreconcilable'}, {de:'kontrovers', en:'controversial'}, {de:'erkenntnistheoretisch', en:'epistemological'}, {de:'tiefgründig', en:'profound'}], sentences: [{de:'Das tiefgründige Paradoxon des freien Willens widerspricht dem Determinismus auf kontroverse Weise.', en:'The profound paradox of free will contradicts determinism in a controversial way.'}, {de:'Philosophen argumentieren und wägen unvereinbare erkenntnistheoretische Positionen sorgfältig ab.', en:'Philosophers argue and carefully weigh up irreconcilable epistemological positions.'}] },
+    { nouns: [{de:'die Digitalisierung', en:'digitalisation', note:'feminine'}, {de:'der Algorithmus', en:'algorithm', note:'masculine'}, {de:'die Datenprivatsphäre', en:'data privacy', note:'feminine'}, {de:'die künstliche Intelligenz', en:'artificial intelligence', note:'feminine'}, {de:'die Überwachung', en:'surveillance', note:'feminine'}], verbs: [{de:'automatisieren', en:'to automate', conj:'er automatisiert'}, {de:'regulieren', en:'to regulate', conj:'er reguliert'}, {de:'gefährden', en:'to endanger', conj:'er gefährdet'}, {de:'missbrauchen', en:'to misuse', conj:'er missbraucht'}], adjs: [{de:'allgegenwärtig', en:'ubiquitous'}, {de:'undurchsichtig', en:'opaque'}, {de:'schützenswert', en:'worth protecting'}, {de:'tiefgreifend', en:'profound'}], sentences: [{de:'Allgegenwärtige Algorithmen der künstlichen Intelligenz automatisieren tiefgreifende gesellschaftliche Prozesse.', en:'Ubiquitous algorithms of artificial intelligence automate profound social processes.'}, {de:'Undurchsichtige Überwachung gefährdet schützenswerte Datenprivatsphäre und muss reguliert werden.', en:'Opaque surveillance endangers data privacy worth protecting and must be regulated.'}] },
+    { nouns: [{de:'die Ethik', en:'ethics', note:'feminine'}, {de:'das Dilemma', en:'dilemma', note:'neuter'}, {de:'die Pflicht', en:'duty', note:'feminine'}, {de:'der Utilitarismus', en:'utilitarianism', note:'masculine'}, {de:'die Tugend', en:'virtue', note:'feminine'}], verbs: [{de:'abwägen', en:'to weigh up', conj:'er wägt ab'}, {de:'rechtfertigen', en:'to justify', conj:'er rechtfertigt'}, {de:'verurteilen', en:'to condemn', conj:'er verurteilt'}, {de:'verpflichten', en:'to oblige', conj:'er verpflichtet'}], adjs: [{de:'moralisch', en:'moral'}, {de:'vertretbar', en:'justifiable'}, {de:'unausweichlich', en:'unavoidable'}, {de:'tugendhaft', en:'virtuous'}], sentences: [{de:'Das moralische Dilemma verpflichtet uns Pflicht und tugendhaftes Handeln sorgfältig abzuwägen.', en:'The moral dilemma obliges us to carefully weigh up duty and virtuous action.'}, {de:'Utilitarismus rechtfertigt Handlungen durch Konsequenzen was viele als moralisch unvertretbar verurteilen.', en:'Utilitarianism justifies actions through consequences which many condemn as morally unjustifiable.'}] },
+    { nouns: [{de:'die Literatur', en:'literature', note:'feminine'}, {de:'die Metapher', en:'metaphor', note:'feminine'}, {de:'der Erzähler', en:'narrator', note:'masculine'}, {de:'die Intertextualität', en:'intertextuality', note:'feminine'}, {de:'das Motiv', en:'motif', note:'neuter'}], verbs: [{de:'symbolisieren', en:'to symbolise', conj:'er symbolisiert'}, {de:'verweisen', en:'to refer', conj:'er verweist'}, {de:'interpretieren', en:'to interpret', conj:'er interpretiert'}, {de:'entschlüsseln', en:'to decode', conj:'er entschlüsselt'}], adjs: [{de:'vielschichtig', en:'multi-layered'}, {de:'ambivalent', en:'ambivalent'}, {de:'bedeutungsgeladen', en:'laden with meaning'}, {de:'literarisch', en:'literary'}], sentences: [{de:'Vielschichtige Metaphern des Erzählers symbolisieren bedeutungsgeladene literarische Motive.', en:'The narrator\'s multi-layered metaphors symbolise motifs laden with literary meaning.'}, {de:'Durch Intertextualität verweist der Text auf andere Werke die ambivalent zu interpretieren sind.', en:'Through intertextuality the text refers to other works that are ambivalently interpreted.'}] },
+    { nouns: [{de:'die Soziologie', en:'sociology', note:'feminine'}, {de:'das Kollektiv', en:'collective', note:'neuter'}, {de:'die Norm', en:'norm', note:'feminine'}, {de:'die Devianz', en:'deviance', note:'feminine'}, {de:'die Sanktion', en:'sanction', note:'feminine'}], verbs: [{de:'abweichen', en:'to deviate', conj:'er weicht ab'}, {de:'sanktionieren', en:'to sanction', conj:'er sanktioniert'}, {de:'internalisieren', en:'to internalise', conj:'er internalisiert'}, {de:'durchsetzen', en:'to enforce', conj:'er setzt durch'}], adjs: [{de:'gesellschaftlich', en:'societal'}, {de:'normkonform', en:'conforming to norms'}, {de:'abweichend', en:'deviant'}, {de:'implizit', en:'implicit'}], sentences: [{de:'Gesellschaftliche Normen werden implizit internalisiert und durch Sanktionen gegen Devianz durchgesetzt.', en:'Societal norms are implicitly internalised and enforced through sanctions against deviance.'}, {de:'Wer vom normkonformen Verhalten des Kollektivs abweicht wird gesellschaftlich sanktioniert.', en:'Those who deviate from the norm-conforming behaviour of the collective are socially sanctioned.'}] },
+    { nouns: [{de:'die Urbanisierung', en:'urbanisation', note:'feminine'}, {de:'die Infrastruktur', en:'infrastructure', note:'feminine'}, {de:'die Segregation', en:'segregation', note:'feminine'}, {de:'die Gentrifizierung', en:'gentrification', note:'feminine'}, {de:'das Stadtgefüge', en:'urban fabric', note:'neuter'}], verbs: [{de:'verdrängen', en:'to displace', conj:'er verdrängt'}, {de:'planen', en:'to plan', conj:'er plant'}, {de:'aufwerten', en:'to upgrade', conj:'er wertet auf'}, {de:'fragmentieren', en:'to fragment', conj:'er fragmentiert'}], adjs: [{de:'sozial gespalten', en:'socially divided'}, {de:'dicht besiedelt', en:'densely populated'}, {de:'strukturell', en:'structural'}, {de:'unaufhaltsam', en:'unstoppable'}], sentences: [{de:'Unaufhaltsame Gentrifizierung wertet dicht besiedelte Stadtgefüge auf und verdrängt ärmere Bevölkerungen.', en:'Unstoppable gentrification upgrades densely populated urban fabrics and displaces poorer populations.'}, {de:'Strukturelle Segregation fragmentiert sozial gespaltene Städte trotz großer Infrastrukturpläne.', en:'Structural segregation fragments socially divided cities despite large infrastructure plans.'}] },
+    { nouns: [{de:'die Neurowissenschaft', en:'neuroscience', note:'feminine'}, {de:'das Gehirn', en:'the brain', note:'neuter'}, {de:'die Plastizität', en:'plasticity', note:'feminine'}, {de:'die Synapse', en:'synapse', note:'feminine'}, {de:'das Verhalten', en:'behaviour', note:'neuter'}], verbs: [{de:'beeinflussen', en:'to influence', conj:'er beeinflusst'}, {de:'stimulieren', en:'to stimulate', conj:'er stimuliert'}, {de:'adaptieren', en:'to adapt', conj:'es adaptiert'}, {de:'kartieren', en:'to map', conj:'er kartiert'}], adjs: [{de:'neuronal', en:'neuronal'}, {de:'plastisch', en:'malleable'}, {de:'komplex', en:'complex'}, {de:'messbar', en:'measurable'}], sentences: [{de:'Das plastische Gehirn adaptiert sich durch neuronale Plastizität an neue Erfahrungen und stimuliert Synapsen.', en:'The malleable brain adapts to new experiences through neuronal plasticity and stimulates synapses.'}, {de:'Komplexes Verhalten kann durch messbare neurowissenschaftliche Methoden kartiert und beeinflusst werden.', en:'Complex behaviour can be mapped and influenced through measurable neuroscientific methods.'}] },
+    { nouns: [{de:'die Epistemologie', en:'epistemology', note:'feminine'}, {de:'das Wissen', en:'knowledge', note:'neuter'}, {de:'die Rechtfertigung', en:'justification', note:'feminine'}, {de:'der Skeptizismus', en:'scepticism', note:'masculine'}, {de:'die Gewissheit', en:'certainty', note:'feminine'}], verbs: [{de:'bezweifeln', en:'to doubt', conj:'er bezweifelt'}, {de:'rechtfertigen', en:'to justify', conj:'er rechtfertigt'}, {de:'beanspruchen', en:'to claim', conj:'er beansprucht'}, {de:'begründen', en:'to substantiate', conj:'er begründet'}], adjs: [{de:'erkenntnistheoretisch', en:'epistemological'}, {de:'unbegründet', en:'unsubstantiated'}, {de:'apodiktisch', en:'apodictic'}, {de:'empirisch', en:'empirical'}], sentences: [{de:'Epistemologie beansprucht die Grundlagen empirischen Wissens erkenntnistheoretisch zu rechtfertigen.', en:'Epistemology claims to epistemologically justify the foundations of empirical knowledge.'}, {de:'Radikaler Skeptizismus bezweifelt apodiktische Gewissheiten und fordert stärkere Begründungen.', en:'Radical scepticism doubts apodictic certainties and demands stronger justifications.'}] },
+    { nouns: [{de:'die Biopolitik', en:'biopolitics', note:'feminine'}, {de:'der Körper', en:'the body', note:'masculine'}, {de:'die Norm', en:'norm', note:'feminine'}, {de:'die Macht', en:'power', note:'feminine'}, {de:'die Disziplinierung', en:'disciplining', note:'feminine'}], verbs: [{de:'regulieren', en:'to regulate', conj:'er reguliert'}, {de:'normieren', en:'to standardise', conj:'er normiert'}, {de:'überwachen', en:'to monitor', conj:'er überwacht'}, {de:'widersetzen', en:'to resist', conj:'er widersetzt sich'}], adjs: [{de:'biopolitisch', en:'biopolitical'}, {de:'normierend', en:'normalising'}, {de:'machtvoll', en:'powerful'}, {de:'widerständig', en:'resistant'}], sentences: [{de:'Biopolitische Macht reguliert und normiert den menschlichen Körper durch gesellschaftliche Disziplinierung.', en:'Biopolitical power regulates and standardises the human body through social disciplining.'}, {de:'Widerständige Individuen widersetzen sich machtvollen normierenden Strukturen und überwachen diese kritisch.', en:'Resistant individuals resist powerful normalising structures and critically monitor them.'}] },
+    { nouns: [{de:'die Quantenmechanik', en:'quantum mechanics', note:'feminine'}, {de:'das Teilchen', en:'particle', note:'neuter'}, {de:'die Superposition', en:'superposition', note:'feminine'}, {de:'die Verschränkung', en:'entanglement', note:'feminine'}, {de:'die Messung', en:'measurement', note:'feminine'}], verbs: [{de:'kollabieren', en:'to collapse', conj:'es kollabiert'}, {de:'messen', en:'to measure', conj:'er misst'}, {de:'verknüpfen', en:'to link', conj:'er verknüpft'}, {de:'interpretieren', en:'to interpret', conj:'er interpretiert'}], adjs: [{de:'nicht-lokal', en:'non-local'}, {de:'probabilistisch', en:'probabilistic'}, {de:'unbestimmt', en:'indeterminate'}, {de:'revolutionär', en:'revolutionary'}], sentences: [{de:'Quantenmechanische Superposition kollabiert probabilistisch wenn ein unbestimmtes Teilchen gemessen wird.', en:'Quantum mechanical superposition collapses probabilistically when an indeterminate particle is measured.'}, {de:'Die revolutionäre Verschränkung verknüpft Teilchen nicht-lokal und ist schwer zu interpretieren.', en:'The revolutionary entanglement links particles non-locally and is difficult to interpret.'}] },
+    { nouns: [{de:'die Semiotik', en:'semiotics', note:'feminine'}, {de:'das Zeichen', en:'sign', note:'neuter'}, {de:'der Signifikant', en:'signifier', note:'masculine'}, {de:'das Signifikat', en:'signified', note:'neuter'}, {de:'der Kontext', en:'context', note:'masculine'}], verbs: [{de:'bezeichnen', en:'to denote', conj:'er bezeichnet'}, {de:'codieren', en:'to encode', conj:'er codiert'}, {de:'decodieren', en:'to decode', conj:'er decodiert'}, {de:'konstituieren', en:'to constitute', conj:'er konstituiert'}], adjs: [{de:'arbiträr', en:'arbitrary'}, {de:'kontextabhängig', en:'context-dependent'}, {de:'semiotisch', en:'semiotic'}, {de:'kulturell bedingt', en:'culturally determined'}], sentences: [{de:'Semiotische Zeichen konstituieren arbiträre Beziehungen zwischen Signifikant und Signifikat.', en:'Semiotic signs constitute arbitrary relationships between signifier and signified.'}, {de:'Kulturell bedingte Codes werden kontextabhängig decodiert und bezeichnen unterschiedliche Bedeutungen.', en:'Culturally determined codes are decoded in a context-dependent manner and denote different meanings.'}] },
+    { nouns: [{de:'die Anthropologie', en:'anthropology', note:'feminine'}, {de:'die Feldforschung', en:'fieldwork', note:'feminine'}, {de:'das Ritual', en:'ritual', note:'neuter'}, {de:'die Identität', en:'identity', note:'feminine'}, {de:'der Ethnozentrismus', en:'ethnocentrism', note:'masculine'}], verbs: [{de:'beobachten', en:'to observe', conj:'er beobachtet'}, {de:'dokumentieren', en:'to document', conj:'er dokumentiert'}, {de:'relativieren', en:'to relativise', conj:'er relativiert'}, {de:'konstruieren', en:'to construct', conj:'er konstruiert'}], adjs: [{de:'ethnozentrisch', en:'ethnocentric'}, {de:'kulturrelativistisch', en:'culturally relativistic'}, {de:'rituell', en:'ritual'}, {de:'konstruiert', en:'constructed'}], sentences: [{de:'Anthropologische Feldforschung beobachtet und dokumentiert rituell konstruierte Identitäten in fremden Kulturen.', en:'Anthropological fieldwork observes and documents ritually constructed identities in foreign cultures.'}, {de:'Kulturrelativistisches Denken relativiert ethnozentrische Vorurteile und fordert offeneres Denken.', en:'Culturally relativistic thinking relativises ethnocentric prejudices and demands more open thinking.'}] },
+    { nouns: [{de:'die Makroökonomie', en:'macroeconomics', note:'feminine'}, {de:'die Rezession', en:'recession', note:'feminine'}, {de:'die Inflation', en:'inflation', note:'feminine'}, {de:'die Geldpolitik', en:'monetary policy', note:'feminine'}, {de:'das Haushaltsdefizit', en:'budget deficit', note:'neuter'}], verbs: [{de:'ankurbeln', en:'to stimulate', conj:'er kurbelt an'}, {de:'eindämmen', en:'to contain', conj:'er dämmt ein'}, {de:'verschärfen', en:'to exacerbate', conj:'er verschärft'}, {de:'prognostizieren', en:'to forecast', conj:'er prognostiziert'}], adjs: [{de:'makroökonomisch', en:'macroeconomic'}, {de:'fiskalisch', en:'fiscal'}, {de:'deflationär', en:'deflationary'}, {de:'expansiv', en:'expansionary'}], sentences: [{de:'Expansive Geldpolitik versucht die makroökonomische Rezession durch fiskalische Maßnahmen anzukurbeln.', en:'Expansionary monetary policy attempts to stimulate the macroeconomic recession through fiscal measures.'}, {de:'Steigende Inflation verschärft das Haushaltsdefizit was Ökonomen als deflationär prognostizieren.', en:'Rising inflation exacerbates the budget deficit which economists forecast as deflationary.'}] },
+    { nouns: [{de:'die Geopolitik', en:'geopolitics', note:'feminine'}, {de:'die Hegemonie', en:'hegemony', note:'feminine'}, {de:'die Einflusssphäre', en:'sphere of influence', note:'feminine'}, {de:'die Allianz', en:'alliance', note:'feminine'}, {de:'der Multilateralismus', en:'multilateralism', note:'masculine'}], verbs: [{de:'dominieren', en:'to dominate', conj:'er dominiert'}, {de:'bündeln', en:'to pool', conj:'er bündelt'}, {de:'aushandeln', en:'to negotiate', conj:'er handelt aus'}, {de:'herausfordern', en:'to challenge', conj:'er fordert heraus'}], adjs: [{de:'hegemonial', en:'hegemonic'}, {de:'multilateral', en:'multilateral'}, {de:'geopolitisch', en:'geopolitical'}, {de:'fragil', en:'fragile'}], sentences: [{de:'Hegemoniale Mächte dominieren geopolitische Einflusssphären und fordern multilaterale Allianzen heraus.', en:'Hegemonic powers dominate geopolitical spheres of influence and challenge multilateral alliances.'}, {de:'Fragile geopolitische Gleichgewichte werden durch multilaterale Verhandlungen ausgehandelt und Kräfte gebündelt.', en:'Fragile geopolitical balances are negotiated through multilateral negotiations and forces are pooled.'}] },
+    { nouns: [{de:'die Transzendentalphilosophie', en:'transcendental philosophy', note:'feminine'}, {de:'die Anschauung', en:'intuition', note:'feminine'}, {de:'der Verstand', en:'understanding', note:'masculine'}, {de:'die Vernunft', en:'reason', note:'feminine'}, {de:'das Ding an sich', en:'the thing in itself', note:'neuter'}], verbs: [{de:'transzendieren', en:'to transcend', conj:'er transzendiert'}, {de:'synthetisieren', en:'to synthesise', conj:'er synthetisiert'}, {de:'konstituieren', en:'to constitute', conj:'er konstituiert'}, {de:'erkennen', en:'to cognise', conj:'er erkennt'}], adjs: [{de:'transzendental', en:'transcendental'}, {de:'apriorisch', en:'a priori'}, {de:'synthetisch', en:'synthetic'}, {de:'noumenal', en:'noumenal'}], sentences: [{de:'Kants Transzendentalphilosophie konstituiert apriorische Anschauungsformen durch die der Verstand die Welt erkennt.', en:"Kant's transcendental philosophy constitutes a priori forms of intuition through which the understanding cognises the world."}, {de:'Das noumenale Ding an sich transzendiert die Vernunft und kann nicht synthetisch erkannt werden.', en:'The noumenal thing in itself transcends reason and cannot be cognised synthetically.'}] },
+    { nouns: [{de:'die Postmoderne', en:'postmodernity', note:'feminine'}, {de:'das Metanarrativ', en:'meta-narrative', note:'neuter'}, {de:'die Dekonstruktion', en:'deconstruction', note:'feminine'}, {de:'die Differenz', en:'difference', note:'feminine'}, {de:'die Identitätspolitik', en:'identity politics', note:'feminine'}], verbs: [{de:'dekonstruieren', en:'to deconstruct', conj:'er dekonstruiert'}, {de:'in Frage stellen', en:'to question', conj:'er stellt in Frage'}, {de:'pluralisieren', en:'to pluralise', conj:'er pluralisiert'}, {de:'subvertieren', en:'to subvert', conj:'er subvertiert'}], adjs: [{de:'postmodern', en:'postmodern'}, {de:'pluralistisch', en:'pluralistic'}, {de:'dekonstruktiv', en:'deconstructive'}, {de:'fragmentiert', en:'fragmented'}], sentences: [{de:'Postmoderne Dekonstruktion stellt pluralistische Metanarrative grundlegend in Frage und subvertiert sie.', en:'Postmodern deconstruction fundamentally questions pluralistic meta-narratives and subverts them.'}, {de:'Fragmentierte Identitätspolitik pluralisiert dekonstruktiv gesellschaftliche Differenzen und Zugehörigkeiten.', en:'Fragmented identity politics pluralises societal differences and belongings in a deconstructive manner.'}] },
+  ],
+};
+
+const NAG_MESSAGES = [
+  "Guten Morgen! 🌅 Time for your <strong>daily German</strong> — just a few minutes keeps the language alive.",
+  "Noch nicht gelernt? Your streak is waiting. Even one look counts. <strong>Auf geht's!</strong>",
+  "Pro tip from a traveller: locals notice when you try. <strong>Two nouns today</strong> could open a door.",
+  "Your future self in Germany thanks you. <strong>Ein bisschen Deutsch</strong>, bitte!",
+  "Language is muscle memory. <strong>Flex it today.</strong> Your vocab is right here.",
+  "Kein Stress. 🎯 Two nouns, a verb, an adjective. <strong>60 seconds max.</strong>",
+  "Nicht vergessen! The Marktplatz awaits — and the vendors prefer <strong>a little German.</strong>",
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+
+const STATE_KEY = 'deutschDaily_v2';
+
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem(STATE_KEY) || '{}');
+    return {
+      level: s.level || 'A1',
+      nagEnabled: s.nagEnabled ?? false,
+      nagTime: s.nagTime || '09:00',
+      hideTranslations: s.hideTranslations ?? false,
+      streak: s.streak || 0,
+      lastLesson: s.lastLesson || null,   // 'YYYY-MM-DD'
+      history: s.history || [],            // [{date, lesson}]
+      seenIndex: s.seenIndex || {},        // {level: nextIndex}
+    };
+  } catch { return { level:'A1', nagEnabled:false, nagTime:'09:00', hideTranslations:false, streak:0, lastLesson:null, history:[], seenIndex:{} }; }
+}
+
+function saveState(s) {
+  localStorage.setItem(STATE_KEY, JSON.stringify(s));
+}
+
+let state = loadState();
+
+// ── LESSON LOGIC ─────────────────────────────────────────────────────────────
+
+let currentLessonIdx = 0; // the lesson currently on screen
+
+function todayStr() {
+  return new Date().toISOString().slice(0,10);
+}
+
+function getPool() {
+  return VOCAB[state.level];
+}
+
+function markLessonDone(idx) {
+  const today = todayStr();
+  const key = `${today}:${idx}`;
+  if (state.history.find(h => h.key === key)) return; // already done
+
+  state.history.unshift({ date: today, lessonIdx: idx, key });
+  if (state.history.length > 120) state.history.pop();
+
+  // advance seenIndex to keep track of furthest seen
+  const pool = getPool();
+  const furthest = (state.seenIndex[state.level] || 0);
+  if (idx >= furthest) {
+    state.seenIndex[state.level] = (idx + 1) % pool.length;
+  }
+
+  // streak: count a unique calendar day
+  const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+  const yStr = yesterday.toISOString().slice(0,10);
+  const doneToday = state.history.filter(h => h.date === today).length;
+  if (doneToday === 1) { // first lesson of this day
+    if (state.lastLesson === yStr) {
+      state.streak++;
+    } else if (state.lastLesson !== today) {
+      state.streak = 1;
+    }
+    state.lastLesson = today;
+  }
+
+  saveState(state);
+}
+
+function navigateLesson(dir) {
+  const pool = getPool();
+  currentLessonIdx = (currentLessonIdx + dir + pool.length) % pool.length;
+  renderLesson();
+  // scroll lesson content back to top
+  document.getElementById('screen-today').scrollTop = 0;
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+
+function renderLesson() {
+  const pool = getPool();
+  const lesson = pool[currentLessonIdx];
+  const hide = state.hideTranslations;
+  const today = todayStr();
+  const key = `${today}:${currentLessonIdx}`;
+  const isDone = !!state.history.find(h => h.key === key);
+
+  // count total done today
+  const doneTodayCount = state.history.filter(h => h.date === today).length;
+  document.getElementById('streak-num').textContent = state.streak;
+  document.getElementById('done-badge').style.display = doneTodayCount > 0 ? 'flex' : 'none';
+  document.getElementById('done-badge').textContent = `✓ ${doneTodayCount} today`;
+
+  const d = new Date();
+  document.getElementById('today-date').textContent =
+    d.toLocaleDateString('en-GB', {weekday:'long', year:'numeric', month:'long', day:'numeric'}).toUpperCase();
+
+  // nav counter
+  document.getElementById('lesson-counter').textContent = `Lesson ${currentLessonIdx + 1} of ${pool.length}`;
+
+  let html = '';
+
+  // Nouns
+  lesson.nouns.forEach(n => {
+    html += `
+    <div class="word-card noun">
+      <div class="word-type">Nomen · Noun</div>
+      <div class="word-de">${n.de}</div>
+      ${n.note ? `<span class="word-article">${n.note}</span>` : ''}
+      ${hide
+        ? `<button class="reveal-btn" onclick="this.nextElementSibling.classList.add('shown');this.style.display='none'">Reveal translation</button>
+           <div class="word-en hidden-en">${n.en}</div>`
+        : `<div class="word-en">${n.en}</div>`}
+    </div>`;
+  });
+
+  // Verb
+  lesson.verbs.forEach(v => {
+    html += `
+  <div class="word-card verb">
+    <div class="word-type">Verb</div>
+    <div class="word-de">${v.de}</div>
+    <span class="word-article">${v.conj}</span>
+    ${hide
+      ? `<button class="reveal-btn" onclick="this.nextElementSibling.classList.add('shown');this.style.display='none'">Reveal translation</button>
+         <div class="word-en hidden-en">${v.en}</div>`
+      : `<div class="word-en">${v.en}</div>`}
+  </div>`;
+  });
+
+  // Adjective
+  lesson.adjs.forEach(a => {
+    html += `
+  <div class="word-card adjective">
+    <div class="word-type">Adjektiv · Adjective</div>
+    <div class="word-de">${a.de}</div>
+    ${hide
+      ? `<button class="reveal-btn" onclick="this.nextElementSibling.classList.add('shown');this.style.display='none'">Reveal translation</button>
+         <div class="word-en hidden-en">${a.en}</div>`
+      : `<div class="word-en">${a.en}</div>`}
+  </div>`;
+  });
+
+  // Sentences
+  lesson.sentences.forEach((s, i) => {
+    html += `
+  <div class="sentence-card">
+    <div class="sentence-label">Beispielsatz ${lesson.sentences.length > 1 ? i+1 : ''} · Example sentence</div>
+    <div class="sentence-de">${s.de}</div>
+    ${hide
+      ? `<button class="reveal-btn" onclick="this.nextElementSibling.classList.add('shown');this.style.display='none'">Reveal translation</button>
+         <div class="sentence-en hidden-en">${s.en}</div>`
+      : `<div class="sentence-en">${s.en}</div>`}
+  </div>`;
+  });
+
+  if (!isDone) {
+    html += `<button class="save-btn" style="margin-top:0" onclick="doneLesson()">✓ Mark as studied</button>`;
+  } else {
+    html += `<div style="text-align:center;color:var(--accent2);font-size:13px;padding:10px 0;">✓ Studied</div>`;
+  }
+
+  document.getElementById('lesson-content').innerHTML = html;
+}
+
+function doneLesson() {
+  markLessonDone(currentLessonIdx);
+  renderLesson();
+  renderHistory();
+}
+
+function renderHistory() {
+  const el = document.getElementById('history-content');
+  const pool_all = VOCAB;
+  if (!state.history.length) {
+    el.innerHTML = `<div class="history-empty"><span class="big">📚</span><span>No lessons yet — start today!</span></div>`;
+    return;
+  }
+  // Group by date
+  const byDate = {};
+  state.history.forEach(h => {
+    if (!byDate[h.date]) byDate[h.date] = [];
+    byDate[h.date].push(h);
+  });
+  el.innerHTML = Object.keys(byDate).map(date => {
+    const entries = byDate[date];
+    const words = entries.flatMap(h => {
+      const pool = pool_all[state.level];
+      const lesson = pool[h.lessonIdx % pool.length];
+      return lesson ? [lesson.nouns[0].de, lesson.verb.de] : [];
+    });
+    return `<div class="history-day">
+      <div class="history-day-date">${date} · ${entries.length} lesson${entries.length > 1 ? 's' : ''}</div>
+      <div class="history-words">
+        ${words.map(w => `<div class="hw-chip">${w}</div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderSettings() {
+  document.querySelectorAll('.level-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.level === state.level);
+  });
+  document.getElementById('nag-toggle').checked = state.nagEnabled;
+  document.getElementById('nag-time').value = state.nagTime;
+  document.getElementById('hide-toggle').checked = state.hideTranslations;
+  document.getElementById('level-badge').textContent = state.level;
+}
+
+// ── NAG BANNER ───────────────────────────────────────────────────────────────
+
+function showNagBanner() {
+  const today = todayStr();
+  const isDone = !!state.history.find(h => h.date === today);
+  const banner = document.getElementById('nag-banner');
+  if (isDone) { banner.classList.remove('show'); return; }
+  const msg = NAG_MESSAGES[new Date().getDay() % NAG_MESSAGES.length];
+  document.getElementById('nag-text').innerHTML = msg;
+  banner.classList.add('show');
+}
+
+// ── NOTIFICATIONS ────────────────────────────────────────────────────────────
+
+function scheduleNotification() {
+  if (!state.nagEnabled) return;
+  if (!('Notification' in window)) return;
+  if (Notification.permission !== 'granted') return;
+
+  // For a PWA we can only fire if a Service Worker is registered
+  // We fire a simulated check; real scheduling needs SW
+  // We'll show a banner instead as fallback
+}
+
+async function requestNotifPermission() {
+  if (!('Notification' in window)) {
+    alert('Notifications are not supported in this browser.\nAdd this page to your Home Screen and open from there for best results.');
+    return;
+  }
+  const perm = await Notification.requestPermission();
+  if (perm === 'granted') {
+    alert('Notifications enabled! 🎉\nFor daily reminders on iOS, add this page to your Home Screen.');
+  } else {
+    alert('Permission denied. You can enable it later in Safari settings.');
+  }
+}
+
+// ── NAV ──────────────────────────────────────────────────────────────────────
+
+let currentScreen = 'today';
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  document.querySelector(`.nav-btn[data-screen="${name}"]`).classList.add('active');
+  currentScreen = name;
+  if (name === 'today') { renderLesson(); showNagBanner(); }
+  if (name === 'history') renderHistory();
+  if (name === 'settings') renderSettings();
+}
+
+// ── SETTINGS SAVE ────────────────────────────────────────────────────────────
+
+function saveSettings() {
+  const newLevel = document.querySelector('.level-pill.active')?.dataset.level || 'A1';
+  if (newLevel !== state.level) currentLessonIdx = 0; // reset on level change
+  state.level = newLevel;
+  state.nagEnabled = document.getElementById('nag-toggle').checked;
+  state.nagTime = document.getElementById('nag-time').value;
+  state.hideTranslations = document.getElementById('hide-toggle').checked;
+  saveState(state);
+  document.getElementById('level-badge').textContent = state.level;
+
+  // flash confirmation
+  const btn = document.getElementById('save-settings');
+  btn.textContent = '✓ Saved!';
+  setTimeout(() => { btn.textContent = 'Save Settings'; showScreen('today'); }, 900);
+}
+
+// ── EVENTS ───────────────────────────────────────────────────────────────────
+
+document.querySelectorAll('.nav-btn').forEach(b => {
+  b.addEventListener('click', () => showScreen(b.dataset.screen));
+});
+
+document.querySelectorAll('.level-pill').forEach(p => {
+  p.addEventListener('click', () => {
+    document.querySelectorAll('.level-pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+  });
+});
+
+document.getElementById('save-settings').addEventListener('click', saveSettings);
+document.getElementById('btn-notif').addEventListener('click', requestNotifPermission);
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+
+renderLesson();
+showNagBanner();
+renderSettings();
+</script>
+</body>
+</html>
