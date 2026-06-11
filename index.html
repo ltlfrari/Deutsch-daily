@@ -951,7 +951,10 @@ function doneLesson() {
   }
   renderLesson();
   renderHistory();
-  document.getElementById('screen-today').scrollTop = 0;
+  const el = document.getElementById('screen-today');
+  el.scrollTop = 0;
+  el.scrollTo({ top: 0, behavior: 'instant' });
+  window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
 function renderHistory() {
