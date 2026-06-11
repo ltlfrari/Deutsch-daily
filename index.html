@@ -421,6 +421,53 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #333355; border-radius: 3px; }
 
+  /* ── NAG POPUP ── */
+  #nag-popup {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  #nag-popup.show { display: flex; }
+  .nag-popup-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+    border: 1px solid #3a2a66;
+  }
+  .nag-popup-emoji { font-size: 40px; margin-bottom: 12px; }
+  .nag-popup-text { font-size: 15px; color: var(--text); line-height: 1.5; margin-bottom: 20px; }
+  .nag-popup-text strong { color: var(--accent); }
+  .nag-popup-btn {
+    width: 100%;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  .nag-popup-dismiss {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 6px;
+  }
+
   /* ── QUIZ ── */
   .quiz-header { margin-bottom: 20px; }
   .quiz-title { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--accent); margin-bottom: 4px; }
@@ -461,6 +508,16 @@
       <button class="icon-btn" id="btn-notif" title="Enable notifications">🔔</button>
     </div>
   </header>
+
+  <!-- ── NAG POPUP ── -->
+  <div id="nag-popup">
+    <div class="nag-popup-card">
+      <div class="nag-popup-emoji">🇩🇪</div>
+      <div class="nag-popup-text" id="nag-popup-text"></div>
+      <button class="nag-popup-btn" onclick="dismissNagPopup(true)">Jetzt lernen!</button>
+      <button class="nag-popup-dismiss" onclick="dismissNagPopup(false)">Später</button>
+    </div>
+  </div>
 
   <!-- ── TODAY ── -->
   <div class="screen active" id="screen-today">
@@ -1169,6 +1226,23 @@ function finishQuiz(passed) {
   }
 }
 
+// ── NAG POPUP ───────────────────────────────────────────────────────────────
+
+function showNagPopup() {
+  if (!state.nagEnabled) return;
+  const today = new Date().toISOString().slice(0,10);
+  const isDone = !!state.history.find(h => h.date === today);
+  if (isDone) return;
+  const msg = NAG_MESSAGES[new Date().getDay() % NAG_MESSAGES.length];
+  document.getElementById('nag-popup-text').innerHTML = msg;
+  document.getElementById('nag-popup').classList.add('show');
+}
+
+function dismissNagPopup(study) {
+  document.getElementById('nag-popup').classList.remove('show');
+  // if they tapped Jetzt lernen, just close — they're already on the lesson screen
+}
+
 // ── SERVICE WORKER & NOTIFICATIONS ──────────────────────────────────────────
 
 let swReg = null;
@@ -1316,6 +1390,7 @@ document.getElementById('btn-notif').addEventListener('click', requestNotifPermi
 renderLesson();
 renderSettings();
 initServiceWorker();
+showNagPopup();
 </script>
 </body>
 </html>
