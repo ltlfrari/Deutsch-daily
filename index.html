@@ -875,9 +875,47 @@ function markLessonDone(idx) {
   saveState(state);
 }
 
+function handleLockedNav(blockIdx) {
+  if (!blockAllLessonsDone(blockIdx)) {
+    alert('Complete all 5 lessons in this block first, then take the test to unlock the next lessons.');
+  } else {
+    startQuiz(blockIdx);
+  }
+}
+
+function blockAllLessonsDone(blockIdx) {
+  // Returns true if every lesson in the given block (0-based block index) has been marked complete at least once
+  const blockStart = blockIdx * TEST_INTERVAL;
+  const blockEnd = blockStart + TEST_INTERVAL - 1;
+  for (let i = blockStart; i <= blockEnd; i++) {
+    if (!state.history.find(h => h.lessonIdx === i)) return false;
+  }
+  return true;
+}
+
 function navigateLesson(dir) {
   const pool = getPool();
   let next = (currentLessonIdx + dir + pool.length) % pool.length;
+
+  // Trying to move forward past the last lesson of the current block?
+  if (dir > 0) {
+    const currentBlock = Math.floor(currentLessonIdx / TEST_INTERVAL);
+    const blockLastIdx = (currentBlock + 1) * TEST_INTERVAL - 1;
+    const passed = getTestState();
+
+    if (currentLessonIdx === blockLastIdx && !passed.includes(currentBlock)) {
+      // Always block navigation and show the lock badge — user must click it to proceed
+      const counterEl = document.getElementById('lesson-counter');
+      counterEl.innerHTML = `Lesson ${currentLessonIdx + 1} of ${pool.length} &nbsp;<span class="lock-badge" style="cursor:pointer" onclick="handleLockedNav(${currentBlock})">🔒 Test needed</span>`;
+
+      if (!blockAllLessonsDone(currentBlock)) {
+        alert('Complete all 5 lessons in this block first, then take the test to unlock the next lessons.');
+      }
+      // If all lessons are done, just show the badge — user clicks it to go to the test
+      return;
+    }
+  }
+
   if (!isLessonUnlocked(next)) {
     const blockNum = Math.floor(next / TEST_INTERVAL);
     const testIdx = blockNum - 1;
@@ -922,24 +960,24 @@ function renderLesson() {
   const testIdx = blockNum; // test after this block
   const passed = getTestState();
   const totalTests = Math.floor(pool.length / TEST_INTERVAL);
-  // Is a test due after this block? (blockNum < totalTests and not yet passed)
-  const testDue = (testIndex => {
+
+  // "Test ready" shows whenever ALL lessons in the current block are done and test not yet passed,
+  // regardless of which specific lesson is on screen right now.
+  const testReady = (testIndex => {
     if (testIndex >= totalTests) return false;
     if (passed.includes(testIndex)) return false;
-    // Test is due if block is complete
-    return currentLessonIdx >= (testIndex + 1) * TEST_INTERVAL - 1;
+    return blockAllLessonsDone(testIndex);
   })(testIdx);
 
   const counterEl = document.getElementById('lesson-counter');
   const prevTestIdx = blockNum - 1; // test that unlocked current block
   const prevTestPassed = prevTestIdx >= 0 && passed.includes(prevTestIdx);
 
-  if (testDue) {
-    counterEl.innerHTML = `<span class="test-due-badge" onclick="startQuiz(${testIdx})">📝 Test ${testIdx + 1} ready!</span>`;
+  if (testReady) {
+    counterEl.innerHTML = `Lesson ${currentLessonIdx + 1} of ${pool.length} &nbsp;<span class="test-due-badge" onclick="startQuiz(${testIdx})">📝 Test ${testIdx + 1} ready!</span>`;
   } else {
-    const nextLocked = !isLessonUnlocked(currentLessonIdx + 1) && currentLessonIdx + 1 < pool.length;
     const retakeBtn = prevTestPassed ? ` &nbsp;<span class="retake-badge" onclick="startQuiz(${prevTestIdx}, true)">↺ Test ${prevTestIdx + 1}</span>` : '';
-    counterEl.innerHTML = `Lesson ${currentLessonIdx + 1} of ${pool.length}` + (nextLocked ? ` &nbsp;<span class="lock-badge">🔒 Test needed</span>` : retakeBtn);
+    counterEl.innerHTML = `Lesson ${currentLessonIdx + 1} of ${pool.length}` + retakeBtn;
   }
 
   // Final exam banner — show if all mini-tests passed but final exam not yet taken
