@@ -1211,40 +1211,39 @@ function shuffle(arr) {
   return a;
 }
 
-// Build 8 quiz questions from a block of 5 lessons
+// Build 8 quiz questions from a block of 5 lessons,
+// using words seen across ALL levels up to and including the current one as distractors
 function buildQuiz(testIdx) {
+  const LEVEL_ORDER = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  const levelIdx = LEVEL_ORDER.indexOf(state.level);
+
   const pool = getPool();
   const blockStart = testIdx * TEST_INTERVAL;
   const lessons = pool.slice(blockStart, blockStart + TEST_INTERVAL);
 
-  // Collect all vocab from the block for distractors
+  // Questions come from this block's 5 lessons
   const allNouns = lessons.flatMap(l => l.nouns);
   const allVerbs = lessons.flatMap(l => l.verbs);
   const allAdjs = lessons.flatMap(l => l.adjs);
   const allSentences = lessons.flatMap(l => l.sentences);
-  const allWords = [...allNouns, ...allVerbs, ...allAdjs];
 
-  // Pool of all english translations for distractors
-  const allEn = allWords.map(w => w.en);
+  // Distractor pool: all words from every level up to and including current
+  const allPriorWords = LEVEL_ORDER.slice(0, levelIdx + 1)
+    .flatMap(lvl => VOCAB[lvl].flatMap(l => [...l.nouns, ...l.verbs, ...l.adjs]));
+  const allPriorEn = [...new Set(allPriorWords.map(w => w.en))];
 
-  function getDistractors(correctEn, pool, count) {
-    const others = pool.filter(e => e !== correctEn);
-    return shuffle(others).slice(0, count);
-  }
+  const allPriorSentences = LEVEL_ORDER.slice(0, levelIdx + 1)
+    .flatMap(lvl => VOCAB[lvl].flatMap(l => l.sentences));
 
   function makeWordQ(word, typeLabel) {
-    // Show German word, pick correct English translation
-    const allEnPool = allWords.map(w => w.en);
-    const distractors = shuffle(allEnPool.filter(e => e !== word.en)).slice(0, 3);
+    const distractors = shuffle(allPriorEn.filter(e => e !== word.en)).slice(0, 3);
     const options = shuffle([word.en, ...distractors]);
     return { type: 'word', typeLabel, question: word.de, sub: word.conj || word.note || '', correct: word.en, options };
   }
 
   function makeSentenceQ(sentence) {
-    // Use other sentences as distractors
-    const otherSentences = allSentences.filter(s => s.de !== sentence.de).map(s => s.en);
-    const distractors = shuffle(otherSentences).slice(0, 3);
-    // Pad with generic distractors if not enough
+    const otherEn = allPriorSentences.filter(s => s.de !== sentence.de).map(s => s.en);
+    const distractors = shuffle(otherEn).slice(0, 3);
     while (distractors.length < 3) distractors.push('—');
     const options = shuffle([sentence.en, ...distractors]);
     return { type: 'sentence', typeLabel: 'What does this mean in English?', question: sentence.de, sub: '', correct: sentence.en, options };
@@ -1291,24 +1290,35 @@ function buildQuiz(testIdx) {
   return shuffle(questions);
 }
 
-// Build 40-question final exam from ALL 25 lessons at a level
+// Build 40-question final exam from ALL 25 lessons at a level,
+// using words seen across ALL levels up to and including this one as distractors
 function buildFinalExam(level) {
+  const LEVEL_ORDER = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  const levelIdx = LEVEL_ORDER.indexOf(level);
+
+  // Questions come only from the current level's lessons
   const pool = VOCAB[level];
   const allNouns = pool.flatMap(l => l.nouns);
   const allVerbs = pool.flatMap(l => l.verbs);
   const allAdjs = pool.flatMap(l => l.adjs);
   const allSentences = pool.flatMap(l => l.sentences);
-  const allWords = [...allNouns, ...allVerbs, ...allAdjs];
-  const allEn = allWords.map(w => w.en);
+
+  // Distractor pool: all words from every level up to and including this one
+  const allPriorWords = LEVEL_ORDER.slice(0, levelIdx + 1)
+    .flatMap(lvl => VOCAB[lvl].flatMap(l => [...l.nouns, ...l.verbs, ...l.adjs]));
+  const allPriorEn = [...new Set(allPriorWords.map(w => w.en))];
+
+  const allPriorSentences = LEVEL_ORDER.slice(0, levelIdx + 1)
+    .flatMap(lvl => VOCAB[lvl].flatMap(l => l.sentences));
 
   function makeWordQ(word, typeLabel) {
-    const distractors = shuffle(allEn.filter(e => e !== word.en)).slice(0, 3);
+    const distractors = shuffle(allPriorEn.filter(e => e !== word.en)).slice(0, 3);
     const options = shuffle([word.en, ...distractors]);
     return { type: 'word', typeLabel, question: word.de, sub: word.conj || word.note || '', correct: word.en, options };
   }
 
   function makeSentenceQ(sentence) {
-    const otherEn = allSentences.filter(s => s.de !== sentence.de).map(s => s.en);
+    const otherEn = allPriorSentences.filter(s => s.de !== sentence.de).map(s => s.en);
     const distractors = shuffle(otherEn).slice(0, 3);
     while (distractors.length < 3) distractors.push('—');
     const options = shuffle([sentence.en, ...distractors]);
