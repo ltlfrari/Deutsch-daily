@@ -903,10 +903,11 @@ function getPoolKey() {
 
 function markLessonDone(idx) {
   const today = todayStr();
-  const key = `${today}:${idx}`;
+  const poolKey = getPoolKey();
+  const key = `${poolKey}:${today}:${idx}`;
   if (state.history.find(h => h.key === key)) return; // already done
 
-  state.history.unshift({ date: today, lessonIdx: idx, key });
+  state.history.unshift({ date: today, lessonIdx: idx, key, poolKey });
   if (state.history.length > 120) state.history.pop();
 
   // advance seenIndex to keep track of furthest seen
@@ -941,11 +942,11 @@ function handleLockedNav(blockIdx) {
 }
 
 function blockAllLessonsDone(blockIdx) {
-  // Returns true if every lesson in the given block (0-based block index) has been marked complete at least once
   const blockStart = blockIdx * TEST_INTERVAL;
   const blockEnd = blockStart + TEST_INTERVAL - 1;
+  const poolKey = getPoolKey();
   for (let i = blockStart; i <= blockEnd; i++) {
-    if (!state.history.find(h => h.lessonIdx === i)) return false;
+    if (!state.history.find(h => h.lessonIdx === i && (h.poolKey === poolKey || h.key && h.key.startsWith(poolKey + ':')))) return false;
   }
   return true;
 }
