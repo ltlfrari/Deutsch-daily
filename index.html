@@ -510,6 +510,26 @@ button, a, [onclick] { touch-action: manipulation; }
   .history-test-retake { background: var(--surface); border: 1px solid #333355; color: var(--muted); font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 10px; cursor: pointer; font-family: inherit; white-space: nowrap; }
   .history-test-retake:active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
 
+  /* ── PACK SWITCHER ── */
+  .pack-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px 0 4px;
+    align-items: center;
+  }
+  .pack-switcher-label { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.5px; margin-right: 2px; }
+  .pack-sw-pill {
+    font-size: 12px; font-weight: 600; font-family: inherit;
+    padding: 5px 12px; border-radius: 16px; cursor: pointer;
+    border: 1.5px solid #2a2a4a; background: var(--surface); color: var(--muted);
+    transition: all 0.15s;
+  }
+  .pack-sw-pill.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .pack-sw-pill.done { border-color: var(--accent2); color: var(--accent2); }
+  .pack-sw-pill.active.done { background: var(--accent2); color: var(--bg); border-color: var(--accent2); }
+  .pack-sw-pill.loading { opacity: 0.5; cursor: wait; }
+
   /* ── EXTRA PACKS ── */
   .pack-banner {
     background: linear-gradient(135deg, #1a2a1a, #1a1a2e);
@@ -581,6 +601,7 @@ button, a, [onclick] { touch-action: manipulation; }
       <div class="lesson-counter" id="lesson-counter"></div>
       <button class="nav-arrow" id="btn-next" onclick="navigateLesson(1)">›</button>
     </div>
+    <div id="pack-switcher" style="display:none"></div>
     <div id="lesson-content"></div>
   </div>
 
@@ -1021,6 +1042,8 @@ function renderLesson() {
   const testIdx = blockNum; // test after this block
   const passed = getTestState();
   const totalTests = Math.floor(pool.length / TEST_INTERVAL);
+  const isSupplementaryPack = !!(state.activePack && state.activePack.level === state.level);
+  const builtInExamPassed = !!state.finalExamPassed[state.level];
 
   // "Test ready" shows whenever ALL lessons in the current block are done and test not yet passed,
   // regardless of which specific lesson is on screen right now.
@@ -1040,9 +1063,37 @@ function renderLesson() {
     counterEl.innerHTML = `Lesson ${currentLessonIdx + 1} of ${pool.length}`;
   }
 
-  // Final exam banner — show if all mini-tests passed but final exam not yet taken
-  const isSupplementaryPack = !!(state.activePack && state.activePack.level === state.level);
-  const builtInExamPassed = !!state.finalExamPassed[state.level];
+  // Pack switcher — show once built-in level exam is passed
+  const packSwitcherEl = document.getElementById('pack-switcher');
+  if (builtInExamPassed) {
+    const availPacks = state.availablePacks[state.level] || [];
+    const activePackId = state.activePack && state.activePack.level === state.level ? state.activePack.packId : null;
+    const builtInActive = !activePackId;
+    const builtInDone = builtInExamPassed;
+
+    let switcherHtml = `<span class="pack-switcher-label">${state.level}:</span>`;
+    // Built-in pill
+    switcherHtml += `<button class="pack-sw-pill${builtInActive ? ' active' : ''}${builtInDone ? ' done' : ''}" onclick="switchToBuiltInPack('${state.level}')">Built-in${builtInDone ? ' ✓' : ''}</button>`;
+    // Supplementary pack pills
+    availPacks.forEach(packId => {
+      const isDownloaded = !!state.downloadedPacks[`${state.level}:${packId}`];
+      const isActive = activePackId === packId;
+      const packExamKey = `${state.level}:${packId}`;
+      const isDoneExam = !!(state.finalExamPassed && state.finalExamPassed[packExamKey]);
+      const label = packId.replace('-', ' ').replace(/\b\w/g, c => c.toUpperCase());
+      if (isDownloaded) {
+        switcherHtml += `<button class="pack-sw-pill${isActive ? ' active' : ''}${isDoneExam ? ' done' : ''}" onclick="switchPackTo('${state.level}','${packId}')">${label}${isDoneExam ? ' ✓' : ''}</button>`;
+      } else {
+        switcherHtml += `<button class="pack-sw-pill" onclick="handlePackSelect('${state.level}','${packId}')" data-pack="${packId}">${label} ↓</button>`;
+      }
+    });
+    packSwitcherEl.innerHTML = `<div class="pack-switcher">${switcherHtml}</div>`;
+    packSwitcherEl.style.display = 'block';
+  } else {
+    packSwitcherEl.innerHTML = '';
+    packSwitcherEl.style.display = 'none';
+  }
+
   const finalExamBanner = allMiniTestsPassed() && !hasFinalExamPassed();
   let html = '';
 
@@ -1086,7 +1137,7 @@ function renderLesson() {
   }
 
   // DEV cheat button — top of page
-  html += `<button onclick="cheatMarkBlock()" style="display:none;">⚡ DEV: Mark all ${TEST_INTERVAL} lessons in this block as studied</button>`;
+  html += `<button onclick="cheatMarkBlock()" style="width:100%;background:#3a1a1a;border:1px dashed #884444;color:#cc6666;font-size:11px;font-family:inherit;padding:6px;border-radius:8px;cursor:pointer;margin-bottom:10px;">⚡ DEV: Mark all ${TEST_INTERVAL} lessons in this block as studied</button>`;
 
   // Nouns
   lesson.nouns.forEach(n => {
@@ -1625,7 +1676,7 @@ function renderQuiz() {
       <div class="quiz-subtitle">${headerSub}</div>
       <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${progressPct}%"></div></div>
       <div class="quiz-progress-label">${current} / ${total}</div>
-      <button onclick="cheatPass()" style="display:none;">⚡ DEV: Mark as Passed</button>
+      <button onclick="cheatPass()" style="margin-top:10px;width:100%;background:#3a1a1a;border:1px dashed #884444;color:#cc6666;font-size:11px;font-family:inherit;padding:6px;border-radius:8px;cursor:pointer;">⚡ DEV: Mark as Passed</button>
     </div>
     <div class="quiz-question-card">
       <div class="quiz-q-type">${q.typeLabel}</div>
@@ -1798,12 +1849,33 @@ function activatePack(level, packId) {
   renderLesson();
 }
 
+function switchPackTo(level, packId) {
+  // Save current position before switching
+  const currentKey = getPoolKey();
+  if (!state.seenIndex) state.seenIndex = {};
+  state.seenIndex[currentKey] = currentLessonIdx;
+
+  state.activePack = { level, packId };
+  state.level = level;
+  const targetKey = `${level}:${packId}`;
+  currentLessonIdx = state.seenIndex[targetKey] || 0;
+  saveState(state);
+  renderLesson();
+  document.getElementById('screen-today').scrollTop = 0;
+}
+
 function switchToBuiltInPack(level) {
+  // Save current position before switching
+  const currentKey = getPoolKey();
+  if (!state.seenIndex) state.seenIndex = {};
+  state.seenIndex[currentKey] = currentLessonIdx;
+
   state.activePack = null;
   state.level = level;
   currentLessonIdx = state.seenIndex[level] || 0;
   saveState(state);
   renderLesson();
+  document.getElementById('screen-today').scrollTop = 0;
 }
 
 async function handlePackSelect(level, packId) {
@@ -1814,10 +1886,10 @@ async function handlePackSelect(level, packId) {
   const ok = await downloadPack(level, packId);
   if (!ok) {
     alert('Could not download pack. Please check your connection and try again.');
-    if (btn) { btn.classList.remove('downloading'); btn.textContent = packId.replace('-', ' ').replace(/\b\w/g, c => c.toUpperCase()); }
+    if (btn) { btn.classList.remove('downloading'); btn.textContent = packId.replace('-', ' ').replace(/\b\w/g, c => c.toUpperCase()) + ' ↓'; }
     return;
   }
-  activatePack(level, packId);
+  switchPackTo(level, packId);
 }
 
 function showPackChooser(level) {
@@ -1911,7 +1983,13 @@ function showScreen(name) {
   const navBtn = document.querySelector(`.nav-btn[data-screen="${name}"]`);
   if (navBtn) navBtn.classList.add('active');
   currentScreen = name;
-  if (name === 'today') { renderLesson(); }
+  if (name === 'today') {
+    renderLesson();
+    // Refresh manifest in background so pack switcher stays up to date
+    if (state.finalExamPassed && state.finalExamPassed[state.level]) {
+      fetchManifest().then(() => renderLesson());
+    }
+  }
   if (name === 'history') renderHistory();
   if (name === 'settings') renderSettings();
   if (name === 'quiz') renderQuiz();
