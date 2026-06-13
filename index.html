@@ -1106,7 +1106,6 @@ function renderLesson() {
         <div class="pack-banner-title">Pack Complete!</div>
         <div class="pack-banner-sub">You've finished all 25 lessons in ${state.activePack.packId.replace('-',' ').replace(/\b\w/g,c=>c.toUpperCase())}. Take the optional 40-question level test to check your progress.</div>
         <button class="pack-banner-btn" onclick="startFinalExam('${state.level}', '${state.activePack.packId}')">📝 Optional Level Test →</button>
-        <button class="pack-banner-btn secondary" onclick="showPackChooser('${state.level}')">More packs</button>
       </div>`;
     } else {
       html += `
