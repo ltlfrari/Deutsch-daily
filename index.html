@@ -568,7 +568,6 @@ button, a, [onclick] { touch-action: manipulation; }
 
   <!-- ── TODAY ── -->
   <div class="screen active" id="screen-today">
-    <div class="lesson-date" id="today-date"></div>
     <div class="streak-row">
       <div class="streak-flame">🔥</div>
       <div class="streak-info">
@@ -1010,8 +1009,6 @@ function renderLesson() {
   document.getElementById('done-badge').textContent = `✓ ${doneTodayCount} today`;
 
   const d = new Date();
-  document.getElementById('today-date').textContent =
-    d.toLocaleDateString('en-GB', {weekday:'long', year:'numeric', month:'long', day:'numeric'}).toUpperCase();
 
   // nav counter + test badge
   const blockNum = Math.floor(currentLessonIdx / TEST_INTERVAL);
