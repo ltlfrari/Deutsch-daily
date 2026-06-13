@@ -1571,10 +1571,14 @@ function renderQuiz() {
           btnLabel = `🎉 Advance to ${nextLevel} →`;
           // Fetch manifest fresh to ensure we have up-to-date pack list
           fetchManifest().then(() => {
+            console.log('manifest fetched, availablePacks:', JSON.stringify(state.availablePacks));
             const packs = state.availablePacks[finalExamLevel] || [];
-            if (packs.length > 0) {
-              const stayBtn = document.getElementById('quiz-stay-btn');
-              if (stayBtn) stayBtn.style.display = 'block';
+            console.log('packs for', finalExamLevel, ':', packs);
+            const stayBtn = document.getElementById('quiz-stay-btn');
+            console.log('stayBtn element:', stayBtn);
+            if (packs.length > 0 && stayBtn) {
+              stayBtn.style.display = 'block';
+              console.log('Stay button shown');
             }
           });
           extraBtn = `<button id="quiz-stay-btn" class="quiz-result-btn" style="background:var(--accent2);margin-top:0;display:none" onclick="finishQuizStay('${finalExamLevel}')">📦 Stay on ${finalExamLevel} — get more content</button>`;
