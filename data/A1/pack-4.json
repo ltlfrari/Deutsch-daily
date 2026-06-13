@@ -1,0 +1,227 @@
+[
+  {
+    "nouns": [{"de": "das Dorf", "en": "the village", "note": "neuter"}, {"de": "die Kirche", "en": "the church", "note": "feminine"}],
+    "verbs": [{"de": "besuchen", "en": "to visit", "conj": "er besucht"}],
+    "adjs": [{"de": "klein", "en": "small"}],
+    "sentences": [
+      {"de": "Wir besuchen ein kleines Dorf mit einer alten Kirche.", "en": "We visit a small village with an old church."},
+      {"de": "Die Kirche steht in der Mitte des Dorfes.", "en": "The church stands in the middle of the village."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Topf", "en": "the flowerpot", "note": "masculine"}, {"de": "die Erde", "en": "the soil", "note": "feminine"}],
+    "verbs": [{"de": "pflanzen", "en": "to plant", "conj": "er pflanzt"}],
+    "adjs": [{"de": "grün", "en": "green"}],
+    "sentences": [
+      {"de": "Sie pflanzt grüne Kräuter in den Topf.", "en": "She plants green herbs in the pot."},
+      {"de": "Die Erde im Topf ist feucht.", "en": "The soil in the pot is damp."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Mond", "en": "the moon", "note": "masculine"}, {"de": "der Stern", "en": "the star", "note": "masculine"}],
+    "verbs": [{"de": "scheinen", "en": "to shine", "conj": "er scheint"}],
+    "adjs": [{"de": "hell", "en": "bright"}],
+    "sentences": [
+      {"de": "Der Mond scheint hell in der Nacht.", "en": "The moon shines brightly in the night."},
+      {"de": "Viele Sterne sind am Himmel zu sehen.", "en": "Many stars can be seen in the sky."}
+    ]
+  },
+  {
+    "nouns": [{"de": "das Frühstück", "en": "the breakfast", "note": "neuter"}, {"de": "das Ei", "en": "the egg", "note": "neuter"}],
+    "verbs": [{"de": "kochen", "en": "to boil", "conj": "er kocht"}],
+    "adjs": [{"de": "frisch", "en": "fresh"}],
+    "sentences": [
+      {"de": "Er kocht frische Eier zum Frühstück.", "en": "He boils fresh eggs for breakfast."},
+      {"de": "Das Frühstück ist die wichtigste Mahlzeit.", "en": "Breakfast is the most important meal."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Mantel", "en": "the coat", "note": "masculine"}, {"de": "der Haken", "en": "the hook", "note": "masculine"}],
+    "verbs": [{"de": "hängen", "en": "to hang", "conj": "er hängt"}],
+    "adjs": [{"de": "schwer", "en": "heavy"}],
+    "sentences": [
+      {"de": "Sie hängt den schweren Mantel an den Haken.", "en": "She hangs the heavy coat on the hook."},
+      {"de": "Der Mantel ist warm und lang.", "en": "The coat is warm and long."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Fisch", "en": "the fish", "note": "masculine"}, {"de": "das Meer", "en": "the sea", "note": "neuter"}],
+    "verbs": [{"de": "angeln", "en": "to fish", "conj": "er angelt"}],
+    "adjs": [{"de": "frisch", "en": "fresh"}],
+    "sentences": [
+      {"de": "Er angelt frische Fische im Meer.", "en": "He fishes for fresh fish in the sea."},
+      {"de": "Das Meer ist blau und weit.", "en": "The sea is blue and vast."}
+    ]
+  },
+  {
+    "nouns": [{"de": "das Kissen", "en": "the pillow", "note": "neuter"}, {"de": "die Decke", "en": "the blanket", "note": "feminine"}],
+    "verbs": [{"de": "schlafen", "en": "to sleep", "conj": "er schläft"}],
+    "adjs": [{"de": "weich", "en": "soft"}],
+    "sentences": [
+      {"de": "Sie schläft unter der weichen Decke mit einem Kissen.", "en": "She sleeps under the soft blanket with a pillow."},
+      {"de": "Das Kissen ist flauschig und bequem.", "en": "The pillow is fluffy and comfortable."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Stift", "en": "the pen", "note": "masculine"}, {"de": "das Papier", "en": "the paper", "note": "neuter"}],
+    "verbs": [{"de": "zeichnen", "en": "to draw", "conj": "er zeichnet"}],
+    "adjs": [{"de": "bunt", "en": "colourful"}],
+    "sentences": [
+      {"de": "Das Kind zeichnet bunte Bilder auf das Papier.", "en": "The child draws colourful pictures on the paper."},
+      {"de": "Der Stift ist blau und schreibt gut.", "en": "The pen is blue and writes well."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Trompete", "en": "the trumpet", "note": "feminine"}, {"de": "der Musiker", "en": "the musician", "note": "masculine"}],
+    "verbs": [{"de": "spielen", "en": "to play", "conj": "er spielt"}],
+    "adjs": [{"de": "laut", "en": "loud"}],
+    "sentences": [
+      {"de": "Der Musiker spielt laut Trompete auf der Bühne.", "en": "The musician plays the trumpet loudly on the stage."},
+      {"de": "Die Trompete klingt sehr hell und klar.", "en": "The trumpet sounds very bright and clear."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Hammer", "en": "the hammer", "note": "masculine"}, {"de": "der Nagel", "en": "the nail", "note": "masculine"}],
+    "verbs": [{"de": "schlagen", "en": "to hit", "conj": "er schlägt"}],
+    "adjs": [{"de": "fest", "en": "firm"}],
+    "sentences": [
+      {"de": "Er schlägt den Nagel fest in die Wand.", "en": "He hits the nail firmly into the wall."},
+      {"de": "Der Hammer ist schwer und aus Metall.", "en": "The hammer is heavy and made of metal."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Spiegel", "en": "the mirror", "note": "masculine"}, {"de": "das Gesicht", "en": "the face", "note": "neuter"}],
+    "verbs": [{"de": "schauen", "en": "to look", "conj": "er schaut"}],
+    "adjs": [{"de": "sauber", "en": "clean"}],
+    "sentences": [
+      {"de": "Sie schaut in den sauberen Spiegel und wäscht das Gesicht.", "en": "She looks in the clean mirror and washes her face."},
+      {"de": "Der Spiegel hängt im Badezimmer über dem Waschbecken.", "en": "The mirror hangs in the bathroom above the sink."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Koffer", "en": "the suitcase", "note": "masculine"}, {"de": "der Flughafen", "en": "the airport", "note": "masculine"}],
+    "verbs": [{"de": "packen", "en": "to pack", "conj": "er packt"}],
+    "adjs": [{"de": "voll", "en": "full"}],
+    "sentences": [
+      {"de": "Sie packt den vollen Koffer für den Flug.", "en": "She packs the full suitcase for the flight."},
+      {"de": "Der Flughafen ist groß und sehr belebt.", "en": "The airport is large and very busy."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Balkon", "en": "the balcony", "note": "masculine"}, {"de": "die Pflanze", "en": "the plant", "note": "feminine"}],
+    "verbs": [{"de": "gießen", "en": "to water", "conj": "er gießt"}],
+    "adjs": [{"de": "grün", "en": "green"}],
+    "sentences": [
+      {"de": "Er gießt die grünen Pflanzen auf dem Balkon.", "en": "He waters the green plants on the balcony."},
+      {"de": "Der Balkon ist klein aber gemütlich.", "en": "The balcony is small but cosy."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Socke", "en": "the sock", "note": "feminine"}, {"de": "der Schuh", "en": "the shoe", "note": "masculine"}],
+    "verbs": [{"de": "suchen", "en": "to look for", "conj": "er sucht"}],
+    "adjs": [{"de": "gleich", "en": "matching"}],
+    "sentences": [
+      {"de": "Er sucht die gleichen Socken im Schrank.", "en": "He looks for the matching socks in the wardrobe."},
+      {"de": "Der Schuh passt nicht zu dieser Socke.", "en": "The shoe does not match this sock."}
+    ]
+  },
+  {
+    "nouns": [{"de": "das Tier", "en": "the animal", "note": "neuter"}, {"de": "der Käfig", "en": "the cage", "note": "masculine"}],
+    "verbs": [{"de": "füttern", "en": "to feed", "conj": "er füttert"}],
+    "adjs": [{"de": "hungrig", "en": "hungry"}],
+    "sentences": [
+      {"de": "Sie füttert das hungrige Tier im Käfig.", "en": "She feeds the hungry animal in the cage."},
+      {"de": "Der Käfig ist groß genug für das Tier.", "en": "The cage is big enough for the animal."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Werkstatt", "en": "the workshop", "note": "feminine"}, {"de": "das Werkzeug", "en": "the tool", "note": "neuter"}],
+    "verbs": [{"de": "reparieren", "en": "to repair", "conj": "er repariert"}],
+    "adjs": [{"de": "kaputt", "en": "broken"}],
+    "sentences": [
+      {"de": "Er repariert das kaputte Fahrrad in der Werkstatt.", "en": "He repairs the broken bicycle in the workshop."},
+      {"de": "Das Werkzeug liegt auf dem Boden der Werkstatt.", "en": "The tools lie on the floor of the workshop."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Ampel", "en": "the traffic light", "note": "feminine"}, {"de": "der Fußgänger", "en": "the pedestrian", "note": "masculine"}],
+    "verbs": [{"de": "warten", "en": "to wait", "conj": "er wartet"}],
+    "adjs": [{"de": "rot", "en": "red"}],
+    "sentences": [
+      {"de": "Der Fußgänger wartet an der roten Ampel.", "en": "The pedestrian waits at the red traffic light."},
+      {"de": "Die Ampel wechselt von rot auf grün.", "en": "The traffic light changes from red to green."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Topf", "en": "the pot", "note": "masculine"}, {"de": "der Herd", "en": "the cooker", "note": "masculine"}],
+    "verbs": [{"de": "kochen", "en": "to cook", "conj": "er kocht"}],
+    "adjs": [{"de": "heiß", "en": "hot"}],
+    "sentences": [
+      {"de": "Das Wasser kocht heiß auf dem Herd.", "en": "The water boils hot on the cooker."},
+      {"de": "Sie stellt den Topf auf den Herd.", "en": "She puts the pot on the cooker."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Brunnen", "en": "the well", "note": "masculine"}, {"de": "der Eimer", "en": "the bucket", "note": "masculine"}],
+    "verbs": [{"de": "schöpfen", "en": "to scoop", "conj": "er schöpft"}],
+    "adjs": [{"de": "tief", "en": "deep"}],
+    "sentences": [
+      {"de": "Er schöpft Wasser aus dem tiefen Brunnen mit einem Eimer.", "en": "He scoops water from the deep well with a bucket."},
+      {"de": "Der Brunnen ist sehr alt und aus Stein.", "en": "The well is very old and made of stone."}
+    ]
+  },
+  {
+    "nouns": [{"de": "das Fenster", "en": "the window", "note": "neuter"}, {"de": "der Vorhang", "en": "the curtain", "note": "masculine"}],
+    "verbs": [{"de": "ziehen", "en": "to draw", "conj": "er zieht"}],
+    "adjs": [{"de": "schwer", "en": "heavy"}],
+    "sentences": [
+      {"de": "Sie zieht den schweren Vorhang vor das Fenster.", "en": "She draws the heavy curtain across the window."},
+      {"de": "Das Fenster lässt viel Licht herein.", "en": "The window lets in a lot of light."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Küste", "en": "the coast", "note": "feminine"}, {"de": "die Welle", "en": "the wave", "note": "feminine"}],
+    "verbs": [{"de": "surfen", "en": "to surf", "conj": "er surft"}],
+    "adjs": [{"de": "hoch", "en": "high"}],
+    "sentences": [
+      {"de": "Er surft auf den hohen Wellen an der Küste.", "en": "He surfs on the high waves at the coast."},
+      {"de": "Die Küste ist felsig und wunderschön.", "en": "The coast is rocky and beautiful."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Kalender", "en": "the calendar", "note": "masculine"}, {"de": "der Termin", "en": "the appointment", "note": "masculine"}],
+    "verbs": [{"de": "eintragen", "en": "to enter", "conj": "er trägt ein"}],
+    "adjs": [{"de": "wichtig", "en": "important"}],
+    "sentences": [
+      {"de": "Sie trägt den wichtigen Termin in den Kalender ein.", "en": "She enters the important appointment in the calendar."},
+      {"de": "Der Kalender hängt an der Wand in der Küche.", "en": "The calendar hangs on the wall in the kitchen."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Rucksack", "en": "the backpack", "note": "masculine"}, {"de": "die Wanderung", "en": "the hike", "note": "feminine"}],
+    "verbs": [{"de": "wandern", "en": "to hike", "conj": "er wandert"}],
+    "adjs": [{"de": "lang", "en": "long"}],
+    "sentences": [
+      {"de": "Er wandert mit einem schweren Rucksack auf einer langen Wanderung.", "en": "He hikes with a heavy backpack on a long hike."},
+      {"de": "Die Wanderung dauert drei Stunden.", "en": "The hike lasts three hours."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Kellner", "en": "the waiter", "note": "masculine"}, {"de": "die Rechnung", "en": "the bill", "note": "feminine"}],
+    "verbs": [{"de": "bringen", "en": "to bring", "conj": "er bringt"}],
+    "adjs": [{"de": "hoch", "en": "high"}],
+    "sentences": [
+      {"de": "Der Kellner bringt die hohe Rechnung zum Tisch.", "en": "The waiter brings the high bill to the table."},
+      {"de": "Die Rechnung ist höher als erwartet.", "en": "The bill is higher than expected."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Unterricht", "en": "the lesson", "note": "masculine"}, {"de": "die Hausaufgabe", "en": "the homework", "note": "feminine"}],
+    "verbs": [{"de": "erklären", "en": "to explain", "conj": "er erklärt"}],
+    "adjs": [{"de": "schwierig", "en": "difficult"}],
+    "sentences": [
+      {"de": "Der Lehrer erklärt die schwierigen Hausaufgaben.", "en": "The teacher explains the difficult homework."},
+      {"de": "Der Unterricht beginnt pünktlich um acht Uhr.", "en": "The lesson starts punctually at eight o'clock."}
+    ]
+  }
+]
