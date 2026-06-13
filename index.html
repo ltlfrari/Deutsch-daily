@@ -1491,20 +1491,23 @@ function startQuiz(testIdx, practiceMode = false) {
 }
 
 function startFinalExam(level, packId) {
-  quizState = {
-    testIdx: -1,
-    finalExam: true,
-    finalExamLevel: level || state.level,
-    packId: packId || null,
-    questions: buildFinalExam(level || state.level),
-    current: 0,
-    score: 0,
-    answered: 0,
-    returnToLesson: currentLessonIdx,
-    practiceMode: !!packId
-  };
-  showScreen('quiz');
-  renderQuiz();
+  // Defer to next event loop tick to avoid race with current render cycle
+  setTimeout(() => {
+    quizState = {
+      testIdx: -1,
+      finalExam: true,
+      finalExamLevel: level || state.level,
+      packId: packId || null,
+      questions: buildFinalExam(level || state.level),
+      current: 0,
+      score: 0,
+      answered: 0,
+      returnToLesson: currentLessonIdx,
+      practiceMode: !!packId
+    };
+    showScreen('quiz');
+    renderQuiz();
+  }, 0);
 }
 
 function cheatMarkBlock() {
