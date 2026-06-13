@@ -1582,6 +1582,23 @@ function renderQuiz() {
             }
           });
           extraBtn = `<button id="quiz-stay-btn" class="quiz-result-btn" style="background:var(--accent2);margin-top:0;display:none" onclick="finishQuizStay('${finalExamLevel}')">📦 Stay on ${finalExamLevel} — get more content</button>`;
+          // Advance button uses dedicated function
+          el.innerHTML = `
+            <div class="quiz-result">
+              <div class="quiz-result-emoji">🎉</div>
+              <div class="quiz-result-title">Ausgezeichnet!</div>
+              <div class="quiz-result-score">${score} / ${total} correct — ${pct}%</div>
+              <div class="quiz-result-msg">Outstanding! You've mastered ${finalExamLevel}.</div>
+              <button class="quiz-result-btn" onclick="advanceLevel('${finalExamLevel}', '${nextLevel}')">${btnLabel}</button>
+              ${extraBtn}
+            </div>`;
+          // Fetch manifest after rendering so stay button can appear
+          fetchManifest().then(() => {
+            const packs = state.availablePacks[finalExamLevel] || [];
+            const stayBtn = document.getElementById('quiz-stay-btn');
+            if (packs.length > 0 && stayBtn) stayBtn.style.display = 'block';
+          });
+          return;
         } else if (passed) {
           btnLabel = '🏆 Complete!';
         } else {
@@ -1672,6 +1689,17 @@ function nextQuizQuestion() {
   document.getElementById('screen-quiz').scrollTop = 0;
 }
 
+function advanceLevel(fromLevel, toLevel) {
+  state.level = toLevel;
+  state.activePack = null;
+  currentLessonIdx = 0;
+  document.getElementById('level-badge').textContent = toLevel;
+  saveState(state);
+  quizState = null;
+  showScreen('today');
+  renderLesson();
+}
+
 function finishQuizStay(level) {
   // User passed the level exam but wants to stay and do more content at this level
   if (!state.finalExamPassed) state.finalExamPassed = {};
@@ -1695,28 +1723,17 @@ function finishQuiz(passed) {
     if (passed) {
       if (!state.finalExamPassed) state.finalExamPassed = {};
       const examKey = quizState.practiceMode
-        ? null  // practice run — don't record
+        ? null
         : (quizState.packId ? `${finalExamLevel}:${quizState.packId}` : finalExamLevel);
-
       if (examKey) {
         state.finalExamPassed[examKey] = true;
-        // Only auto-advance for the built-in pack (not supplementary packs)
-        if (!quizState.packId) {
-          const LEVEL_ORDER = ['A1','A2','B1','B2','C1','C2'];
-          const nextLevel = LEVEL_ORDER[LEVEL_ORDER.indexOf(finalExamLevel) + 1];
-          if (nextLevel) {
-            state.level = nextLevel;
-            state.activePack = null;
-            currentLessonIdx = 0;
-            document.getElementById('level-badge').textContent = nextLevel;
-          }
-        }
         saveState(state);
       }
     }
-    quizState = null;
-    showScreen('today');
-    renderLesson();
+    // Show the result screen — let user choose to advance or stay
+    quizState.current = quizState.questions.length; // ensure result screen shows
+    quizState.score = passed ? quizState.questions.length : (quizState.score || 0);
+    renderQuiz();
     return;
   }
 
@@ -1762,13 +1779,20 @@ const DATA_BASE = 'data'; // relative path — works on GitHub Pages
 
 async function fetchManifest() {
   try {
-    const res = await fetch(`${DATA_BASE}/manifest.json?t=${Date.now()}`);
+    const url = `${DATA_BASE}/manifest.json?t=${Date.now()}`;
+    console.log('Fetching manifest from:', url);
+    const res = await fetch(url);
+    console.log('Manifest response status:', res.status);
     if (!res.ok) return null;
     const data = await res.json();
+    console.log('Manifest data:', JSON.stringify(data));
     state.availablePacks = data.packs || {};
     saveState(state);
     return data.packs;
-  } catch { return null; }
+  } catch(e) { 
+    console.error('fetchManifest error:', e);
+    return null; 
+  }
 }
 
 async function downloadPack(level, packId) {
