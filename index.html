@@ -69,15 +69,15 @@ button, a, [onclick] { touch-action: manipulation; }
     letter-spacing: -0.5px;
   }
   .logo span { display: inline-flex; gap: 4px; margin-left: 6px; vertical-align: middle; }
-  .level-pill {
+  .level-sw-pill {
     color: var(--muted); font-size: 13px; font-family: 'DM Sans', sans-serif;
     font-weight: 700; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 6px;
     border: 1.5px solid transparent; background: transparent; cursor: default;
     font-family: inherit;
   }
-  .level-pill.unlocked { cursor: pointer; border-color: #2a2a4a; color: var(--muted); }
-  .level-pill.unlocked:hover { border-color: var(--accent); color: var(--accent); }
-  .level-pill.active { background: rgba(212,175,55,0.15); border-color: var(--accent); color: var(--accent); cursor: default; }
+  .level-sw-pill.unlocked { cursor: pointer; border-color: #2a2a4a; color: var(--muted); }
+  .level-sw-pill.unlocked:hover { border-color: var(--accent); color: var(--accent); }
+  .level-sw-pill.active { background: rgba(212,175,55,0.15); border-color: var(--accent); color: var(--accent); cursor: default; }
   .header-btns { display: flex; gap: 8px; }
   .icon-btn {
     background: var(--card);
@@ -1925,11 +1925,10 @@ function renderLevelSelector() {
     const isActive = lvl === state.level;
     const isPassed = lvl === 'A1' || !!(state.finalExamPassed && state.finalExamPassed[LEVEL_ORDER[LEVEL_ORDER.indexOf(lvl) - 1]]);
     if (isActive) {
-      html += `<button class="level-pill active">${lvl}</button>`;
+      html += `<button class="level-sw-pill active">${lvl}</button>`;
     } else if (isPassed) {
-      html += `<button class="level-pill unlocked" onclick="switchToLevel('${lvl}')">${lvl}</button>`;
+      html += `<button class="level-sw-pill unlocked" onclick="switchToLevel('${lvl}')">${lvl}</button>`;
     }
-    // Locked levels not shown
   });
   el.innerHTML = html;
 }
