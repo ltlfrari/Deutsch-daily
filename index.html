@@ -1504,6 +1504,19 @@ function startFinalExam(level, packId) {
   renderQuiz();
 }
 
+function cheatPass() {
+  // DEV ONLY: mark all lessons in the block as studied, then simulate a perfect pass
+  if (!quizState.finalExam) {
+    const blockStart = quizState.testIdx * TEST_INTERVAL;
+    for (let i = blockStart; i < blockStart + TEST_INTERVAL; i++) {
+      markLessonDone(i);
+    }
+  }
+  quizState.score = quizState.questions.length;
+  quizState.current = quizState.questions.length;
+  finishQuiz(true);
+}
+
 function renderQuiz() {
   const el = document.getElementById('quiz-content');
   if (!quizState) return;
@@ -1581,6 +1594,7 @@ function renderQuiz() {
       <div class="quiz-subtitle">${headerSub}</div>
       <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${progressPct}%"></div></div>
       <div class="quiz-progress-label">${current} / ${total}</div>
+      <button onclick="cheatPass()" style="margin-top:10px;width:100%;background:#3a1a1a;border:1px dashed #884444;color:#cc6666;font-size:11px;font-family:inherit;padding:6px;border-radius:8px;cursor:pointer;">⚡ DEV: Mark as Passed</button>
     </div>
     <div class="quiz-question-card">
       <div class="quiz-q-type">${q.typeLabel}</div>
