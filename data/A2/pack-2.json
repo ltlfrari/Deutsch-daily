@@ -1,0 +1,227 @@
+[
+  {
+    "nouns": [{"de": "die Verabredung", "en": "the date / arrangement", "note": "feminine"}, {"de": "der Treffpunkt", "en": "the meeting point", "note": "masculine"}, {"de": "die Verspätung", "en": "the delay", "note": "feminine"}],
+    "verbs": [{"de": "vereinbaren", "en": "to arrange", "conj": "er vereinbart"}, {"de": "sich treffen", "en": "to meet up", "conj": "er trifft sich"}],
+    "adjs": [{"de": "pünktlich", "en": "punctual"}, {"de": "zuverlässig", "en": "reliable"}],
+    "sentences": [
+      {"de": "Sie vereinbaren eine Verabredung am Treffpunkt vor dem Kino.", "en": "They arrange a meeting at the meeting point in front of the cinema."},
+      {"de": "Er kommt mit Verspätung aber sie ist zuverlässig und wartet.", "en": "He arrives late but she is reliable and waits."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Bewerbung", "en": "the job application", "note": "feminine"}, {"de": "der Lebenslauf", "en": "the CV", "note": "masculine"}, {"de": "das Vorstellungsgespräch", "en": "the job interview", "note": "neuter"}],
+    "verbs": [{"de": "bewerben", "en": "to apply", "conj": "er bewirbt sich"}, {"de": "einreichen", "en": "to submit", "conj": "er reicht ein"}],
+    "adjs": [{"de": "professionell", "en": "professional"}, {"de": "erfolgreich", "en": "successful"}],
+    "sentences": [
+      {"de": "Sie reicht einen professionellen Lebenslauf mit ihrer Bewerbung ein.", "en": "She submits a professional CV with her job application."},
+      {"de": "Das Vorstellungsgespräch war erfolgreich und sie bekommt den Job.", "en": "The job interview was successful and she gets the job."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Untermieter", "en": "the subtenant", "note": "masculine"}, {"de": "die Nebenkosten", "en": "the utility bills", "note": "feminine"}, {"de": "der Mietvertrag", "en": "the rental contract", "note": "masculine"}],
+    "verbs": [{"de": "unterschreiben", "en": "to sign", "conj": "er unterschreibt"}, {"de": "kündigen", "en": "to terminate", "conj": "er kündigt"}],
+    "adjs": [{"de": "monatlich", "en": "monthly"}, {"de": "schriftlich", "en": "written"}],
+    "sentences": [
+      {"de": "Er unterschreibt den Mietvertrag und zahlt monatliche Nebenkosten.", "en": "He signs the rental contract and pays monthly utility bills."},
+      {"de": "Der Untermieter kündigt den Mietvertrag schriftlich.", "en": "The subtenant terminates the rental contract in writing."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Gesundheit", "en": "health", "note": "feminine"}, {"de": "die Krankenkasse", "en": "the health insurance", "note": "feminine"}, {"de": "die Versicherung", "en": "the insurance", "note": "feminine"}],
+    "verbs": [{"de": "versichern", "en": "to insure", "conj": "er versichert"}, {"de": "beantragen", "en": "to apply for", "conj": "er beantragt"}],
+    "adjs": [{"de": "pflichtversichert", "en": "compulsorily insured"}, {"de": "gesetzlich", "en": "statutory"}],
+    "sentences": [
+      {"de": "Er beantragt eine gesetzliche Krankenversicherung für seine Gesundheit.", "en": "He applies for statutory health insurance for his health."},
+      {"de": "Die Versicherung ist pflichtversichert für alle Arbeitnehmer.", "en": "The insurance is compulsory for all employees."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Ausflug", "en": "the day trip", "note": "masculine"}, {"de": "die Bergbahn", "en": "the mountain railway", "note": "feminine"}, {"de": "das Gipfel", "en": "the summit", "note": "neuter"}],
+    "verbs": [{"de": "unternehmen", "en": "to undertake", "conj": "er unternimmt"}, {"de": "erreichen", "en": "to reach", "conj": "er erreicht"}],
+    "adjs": [{"de": "atemberaubend", "en": "breathtaking"}, {"de": "steil", "en": "steep"}],
+    "sentences": [
+      {"de": "Sie unternehmen einen Ausflug mit der Bergbahn zum atemberaubenden Gipfel.", "en": "They take a day trip on the mountain railway to the breathtaking summit."},
+      {"de": "Der steile Weg zum Gipfel ist anstrengend aber lohnenswert.", "en": "The steep path to the summit is exhausting but worthwhile."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Handwerker", "en": "the tradesman", "note": "masculine"}, {"de": "die Rechnung", "en": "the invoice", "note": "feminine"}, {"de": "der Kostenvoranschlag", "en": "the estimate", "note": "masculine"}],
+    "verbs": [{"de": "beauftragen", "en": "to commission", "conj": "er beauftragt"}, {"de": "reparieren", "en": "to repair", "conj": "er repariert"}],
+    "adjs": [{"de": "teuer", "en": "expensive"}, {"de": "fachmännisch", "en": "professional"}],
+    "sentences": [
+      {"de": "Sie beauftragt einen Handwerker und bekommt einen Kostenvoranschlag.", "en": "She commissions a tradesman and gets an estimate."},
+      {"de": "Die Rechnung ist teuer aber die Arbeit ist fachmännisch.", "en": "The invoice is expensive but the work is professional."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Umwelt", "en": "the environment", "note": "feminine"}, {"de": "der Müll", "en": "the rubbish", "note": "masculine"}, {"de": "die Mülltonne", "en": "the bin", "note": "feminine"}],
+    "verbs": [{"de": "recyceln", "en": "to recycle", "conj": "er recycelt"}, {"de": "trennen", "en": "to separate", "conj": "er trennt"}],
+    "adjs": [{"de": "umweltfreundlich", "en": "environmentally friendly"}, {"de": "nachhaltig", "en": "sustainable"}],
+    "sentences": [
+      {"de": "Er trennt den Müll umweltfreundlich in verschiedene Mülltonnen.", "en": "He separates the rubbish in an environmentally friendly way into different bins."},
+      {"de": "Recyceln ist eine nachhaltige Methode um die Umwelt zu schützen.", "en": "Recycling is a sustainable method to protect the environment."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Nachbar", "en": "the neighbour", "note": "masculine"}, {"de": "der Lärm", "en": "the noise", "note": "masculine"}, {"de": "die Beschwerde", "en": "the complaint", "note": "feminine"}],
+    "verbs": [{"de": "beschweren", "en": "to complain", "conj": "er beschwert sich"}, {"de": "stören", "en": "to disturb", "conj": "er stört"}],
+    "adjs": [{"de": "laut", "en": "loud"}, {"de": "rücksichtslos", "en": "inconsiderate"}],
+    "sentences": [
+      {"de": "Der Nachbar stört rücksichtslos mit lautem Lärm in der Nacht.", "en": "The neighbour disturbs inconsiderately with loud noise at night."},
+      {"de": "Sie schreibt eine Beschwerde wegen des störenden Lärms.", "en": "She writes a complaint because of the disturbing noise."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Kurs", "en": "the course", "note": "masculine"}, {"de": "die Teilnahme", "en": "the participation", "note": "feminine"}, {"de": "das Zertifikat", "en": "the certificate", "note": "neuter"}],
+    "verbs": [{"de": "teilnehmen", "en": "to take part", "conj": "er nimmt teil"}, {"de": "bestehen", "en": "to pass", "conj": "er besteht"}],
+    "adjs": [{"de": "intensiv", "en": "intensive"}, {"de": "anerkannt", "en": "recognised"}],
+    "sentences": [
+      {"de": "Sie nimmt an einem intensiven Sprachkurs teil und besteht die Prüfung.", "en": "She takes part in an intensive language course and passes the exam."},
+      {"de": "Das anerkannte Zertifikat beweist ihre Teilnahme und ihren Erfolg.", "en": "The recognised certificate proves her participation and success."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Stau", "en": "the traffic jam", "note": "masculine"}, {"de": "die Umleitung", "en": "the diversion", "note": "feminine"}, {"de": "das Navi", "en": "the sat nav", "note": "neuter"}],
+    "verbs": [{"de": "umleiten", "en": "to divert", "conj": "er leitet um"}, {"de": "stecken", "en": "to be stuck", "conj": "er steckt"}],
+    "adjs": [{"de": "nervig", "en": "annoying"}, {"de": "lang", "en": "long"}],
+    "sentences": [
+      {"de": "Er steckt in einem langen Stau und das Navi zeigt eine Umleitung.", "en": "He is stuck in a long traffic jam and the sat nav shows a diversion."},
+      {"de": "Der nervige Stau macht die Fahrt viel länger als geplant.", "en": "The annoying traffic jam makes the journey much longer than planned."}
+    ]
+  },
+  {
+    "nouns": [{"de": "das Ehrenamt", "en": "the voluntary work", "note": "neuter"}, {"de": "die Organisation", "en": "the organisation", "note": "feminine"}, {"de": "der Einsatz", "en": "the commitment", "note": "masculine"}],
+    "verbs": [{"de": "engagieren", "en": "to engage", "conj": "er engagiert sich"}, {"de": "unterstützen", "en": "to support", "conj": "er unterstützt"}],
+    "adjs": [{"de": "freiwillig", "en": "voluntary"}, {"de": "sozial", "en": "social"}],
+    "sentences": [
+      {"de": "Sie engagiert sich freiwillig in einer sozialen Organisation.", "en": "She voluntarily engages in a social organisation."},
+      {"de": "Ihr Einsatz im Ehrenamt unterstützt viele Menschen in der Gemeinde.", "en": "Her commitment to voluntary work supports many people in the community."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Veranstaltung", "en": "the event", "note": "feminine"}, {"de": "der Einlass", "en": "the admission", "note": "masculine"}, {"de": "die Warteschlange", "en": "the queue", "note": "feminine"}],
+    "verbs": [{"de": "anstehen", "en": "to queue", "conj": "er steht an"}, {"de": "einlassen", "en": "to admit", "conj": "er lässt ein"}],
+    "adjs": [{"de": "ausverkauft", "en": "sold out"}, {"de": "beliebt", "en": "popular"}],
+    "sentences": [
+      {"de": "Die beliebte Veranstaltung ist ausverkauft und die Warteschlange ist lang.", "en": "The popular event is sold out and the queue is long."},
+      {"de": "Er steht in der Warteschlange für den Einlass zur Veranstaltung.", "en": "He queues for admission to the event."}
+    ]
+  },
+  {
+    "nouns": [{"de": "das Formular", "en": "the form", "note": "neuter"}, {"de": "die Behörde", "en": "the authority", "note": "feminine"}, {"de": "der Antrag", "en": "the application", "note": "masculine"}],
+    "verbs": [{"de": "ausfüllen", "en": "to fill in", "conj": "er füllt aus"}, {"de": "einreichen", "en": "to submit", "conj": "er reicht ein"}],
+    "adjs": [{"de": "amtlich", "en": "official"}, {"de": "vollständig", "en": "complete"}],
+    "sentences": [
+      {"de": "Er füllt das amtliche Formular vollständig aus und reicht den Antrag ein.", "en": "He fills in the official form completely and submits the application."},
+      {"de": "Die Behörde prüft den Antrag und antwortet schriftlich.", "en": "The authority reviews the application and responds in writing."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Urlaub", "en": "the holiday", "note": "masculine"}, {"de": "die Ferienwohnung", "en": "the holiday apartment", "note": "feminine"}, {"de": "die Buchung", "en": "the booking", "note": "feminine"}],
+    "verbs": [{"de": "buchen", "en": "to book", "conj": "er bucht"}, {"de": "stornieren", "en": "to cancel", "conj": "er storniert"}],
+    "adjs": [{"de": "günstig", "en": "affordable"}, {"de": "zentral", "en": "central"}],
+    "sentences": [
+      {"de": "Sie bucht eine günstige Ferienwohnung zentral in der Stadt.", "en": "She books an affordable holiday apartment centrally in the city."},
+      {"de": "Die Buchung kann bis 24 Stunden vorher storniert werden.", "en": "The booking can be cancelled up to 24 hours before."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Diät", "en": "the diet", "note": "feminine"}, {"de": "das Gewicht", "en": "the weight", "note": "neuter"}, {"de": "die Waage", "en": "the scales", "note": "feminine"}],
+    "verbs": [{"de": "abnehmen", "en": "to lose weight", "conj": "er nimmt ab"}, {"de": "messen", "en": "to measure", "conj": "er misst"}],
+    "adjs": [{"de": "gesund", "en": "healthy"}, {"de": "ausgewogen", "en": "balanced"}],
+    "sentences": [
+      {"de": "Er macht eine gesunde Diät und nimmt langsam ab.", "en": "He follows a healthy diet and slowly loses weight."},
+      {"de": "Sie misst ihr Gewicht auf der Waage und isst ausgewogen.", "en": "She measures her weight on the scales and eats a balanced diet."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Prüfung", "en": "the exam", "note": "feminine"}, {"de": "der Prüfer", "en": "the examiner", "note": "masculine"}, {"de": "das Ergebnis", "en": "the result", "note": "neuter"}],
+    "verbs": [{"de": "prüfen", "en": "to examine", "conj": "er prüft"}, {"de": "nervös sein", "en": "to be nervous", "conj": "er ist nervös"}],
+    "adjs": [{"de": "mündlich", "en": "oral"}, {"de": "schriftlich", "en": "written"}],
+    "sentences": [
+      {"de": "Die mündliche Prüfung macht ihn nervös aber das Ergebnis ist gut.", "en": "The oral exam makes him nervous but the result is good."},
+      {"de": "Der Prüfer erklärt die schriftliche Prüfung sehr klar.", "en": "The examiner explains the written exam very clearly."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Abfall", "en": "the waste", "note": "masculine"}, {"de": "die Tüte", "en": "the bag", "note": "feminine"}, {"de": "der Supermarkt", "en": "the supermarket", "note": "masculine"}],
+    "verbs": [{"de": "vermeiden", "en": "to avoid", "conj": "er vermeidet"}, {"de": "mitbringen", "en": "to bring along", "conj": "er bringt mit"}],
+    "adjs": [{"de": "plastikfrei", "en": "plastic-free"}, {"de": "wiederverwendbar", "en": "reusable"}],
+    "sentences": [
+      {"de": "Sie bringt eine wiederverwendbare Tüte in den Supermarkt um Plastikabfall zu vermeiden.", "en": "She brings a reusable bag to the supermarket to avoid plastic waste."},
+      {"de": "Ein plastikfreier Einkauf ist gut für die Umwelt.", "en": "A plastic-free shopping trip is good for the environment."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Konflikt", "en": "the conflict", "note": "masculine"}, {"de": "die Lösung", "en": "the solution", "note": "feminine"}, {"de": "der Kompromiss", "en": "the compromise", "note": "masculine"}],
+    "verbs": [{"de": "lösen", "en": "to solve", "conj": "er löst"}, {"de": "einigen", "en": "to agree", "conj": "er einigt sich"}],
+    "adjs": [{"de": "sachlich", "en": "objective"}, {"de": "fair", "en": "fair"}],
+    "sentences": [
+      {"de": "Sie lösen den Konflikt mit einem fairen Kompromiss.", "en": "They resolve the conflict with a fair compromise."},
+      {"de": "Beide einigen sich sachlich auf eine gemeinsame Lösung.", "en": "Both agree objectively on a joint solution."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Verein", "en": "the club", "note": "masculine"}, {"de": "die Mitgliedschaft", "en": "the membership", "note": "feminine"}, {"de": "der Beitrag", "en": "the fee", "note": "masculine"}],
+    "verbs": [{"de": "beitreten", "en": "to join", "conj": "er tritt bei"}, {"de": "kündigen", "en": "to cancel", "conj": "er kündigt"}],
+    "adjs": [{"de": "jährlich", "en": "annual"}, {"de": "aktiv", "en": "active"}],
+    "sentences": [
+      {"de": "Er tritt dem Sportverein bei und zahlt einen jährlichen Beitrag.", "en": "He joins the sports club and pays an annual fee."},
+      {"de": "Die aktive Mitgliedschaft bringt viele Vorteile.", "en": "The active membership brings many advantages."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Haltestelle", "en": "the bus stop", "note": "feminine"}, {"de": "der Bus", "en": "the bus", "note": "masculine"}, {"de": "der Fahrplan", "en": "the timetable", "note": "masculine"}],
+    "verbs": [{"de": "einsteigen", "en": "to board", "conj": "er steigt ein"}, {"de": "verpassen", "en": "to miss", "conj": "er verpasst"}],
+    "adjs": [{"de": "regelmäßig", "en": "regular"}, {"de": "überfüllt", "en": "overcrowded"}],
+    "sentences": [
+      {"de": "Er verpasst den Bus an der Haltestelle weil der Fahrplan unregelmäßig ist.", "en": "He misses the bus at the bus stop because the timetable is irregular."},
+      {"de": "Der überfüllte Bus kommt regelmäßig alle zehn Minuten.", "en": "The overcrowded bus comes regularly every ten minutes."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Karriere", "en": "the career", "note": "feminine"}, {"de": "die Beförderung", "en": "the promotion", "note": "feminine"}, {"de": "der Vorgesetzte", "en": "the superior", "note": "masculine"}],
+    "verbs": [{"de": "befördern", "en": "to promote", "conj": "er befördert"}, {"de": "verdienen", "en": "to earn", "conj": "er verdient"}],
+    "adjs": [{"de": "ehrgeizig", "en": "ambitious"}, {"de": "verdient", "en": "deserved"}],
+    "sentences": [
+      {"de": "Der Vorgesetzte befördert den ehrgeizigen Mitarbeiter verdient.", "en": "The superior promotes the ambitious employee in a deserved manner."},
+      {"de": "Die Beförderung ist gut für seine Karriere und er verdient mehr.", "en": "The promotion is good for his career and he earns more."}
+    ]
+  },
+  {
+    "nouns": [{"de": "das Treffen", "en": "the meeting", "note": "neuter"}, {"de": "die Tagesordnung", "en": "the agenda", "note": "feminine"}, {"de": "das Protokoll", "en": "the minutes", "note": "neuter"}],
+    "verbs": [{"de": "leiten", "en": "to chair", "conj": "er leitet"}, {"de": "protokollieren", "en": "to take minutes", "conj": "er protokolliert"}],
+    "adjs": [{"de": "effizient", "en": "efficient"}, {"de": "produktiv", "en": "productive"}],
+    "sentences": [
+      {"de": "Sie leitet das effiziente Treffen nach der Tagesordnung.", "en": "She chairs the efficient meeting according to the agenda."},
+      {"de": "Er protokolliert das produktive Treffen und schickt das Protokoll.", "en": "He takes minutes of the productive meeting and sends them out."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Kindergarten", "en": "the kindergarten", "note": "masculine"}, {"de": "die Erzieherin", "en": "the nursery teacher", "note": "feminine"}, {"de": "die Eingewöhnung", "en": "the settling-in period", "note": "feminine"}],
+    "verbs": [{"de": "eingewöhnen", "en": "to settle in", "conj": "er gewöhnt sich ein"}, {"de": "betreuen", "en": "to look after", "conj": "er betreut"}],
+    "adjs": [{"de": "spielerisch", "en": "playful"}, {"de": "geduldig", "en": "patient"}],
+    "sentences": [
+      {"de": "Die geduldige Erzieherin betreut die Kinder spielerisch im Kindergarten.", "en": "The patient nursery teacher looks after the children in a playful way in kindergarten."},
+      {"de": "Die Eingewöhnung dauert einige Wochen bis sich das Kind wohlfühlt.", "en": "The settling-in period takes a few weeks until the child feels comfortable."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Werbung", "en": "the advertisement", "note": "feminine"}, {"de": "das Angebot", "en": "the offer", "note": "neuter"}, {"de": "der Rabatt", "en": "the discount", "note": "masculine"}],
+    "verbs": [{"de": "werben", "en": "to advertise", "conj": "er wirbt"}, {"de": "sparen", "en": "to save", "conj": "er spart"}],
+    "adjs": [{"de": "verlockend", "en": "tempting"}, {"de": "begrenzt", "en": "limited"}],
+    "sentences": [
+      {"de": "Die verlockende Werbung zeigt ein begrenztes Angebot mit großem Rabatt.", "en": "The tempting advertisement shows a limited offer with a large discount."},
+      {"de": "Er spart Geld durch Rabatte und günstige Angebote.", "en": "He saves money through discounts and affordable offers."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Werkzeugkiste", "en": "the toolbox", "note": "feminine"}, {"de": "der Schraubenzieher", "en": "the screwdriver", "note": "masculine"}, {"de": "die Schraube", "en": "the screw", "note": "feminine"}],
+    "verbs": [{"de": "festschrauben", "en": "to screw tight", "conj": "er schraubt fest"}, {"de": "montieren", "en": "to assemble", "conj": "er montiert"}],
+    "adjs": [{"de": "praktisch", "en": "practical"}, {"de": "stabil", "en": "stable"}],
+    "sentences": [
+      {"de": "Er montiert das stabile Regal und schraubt die Schrauben fest.", "en": "He assembles the stable shelf and screws the screws tight."},
+      {"de": "Der praktische Schraubenzieher liegt in der Werkzeugkiste.", "en": "The practical screwdriver is in the toolbox."}
+    ]
+  }
+]

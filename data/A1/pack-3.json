@@ -1,0 +1,227 @@
+[
+  {
+    "nouns": [{"de": "die Mutter", "en": "the mother", "note": "feminine"}, {"de": "der Vater", "en": "the father", "note": "masculine"}],
+    "verbs": [{"de": "rufen", "en": "to call", "conj": "er ruft"}],
+    "adjs": [{"de": "lieb", "en": "dear / kind"}],
+    "sentences": [
+      {"de": "Die Mutter ruft den Vater zum Essen.", "en": "The mother calls the father for dinner."},
+      {"de": "Mein Vater ist sehr lieb.", "en": "My father is very kind."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Apfel", "en": "the apple", "note": "masculine"}, {"de": "der Teller", "en": "the plate", "note": "masculine"}],
+    "verbs": [{"de": "schneiden", "en": "to cut", "conj": "er schneidet"}],
+    "adjs": [{"de": "süß", "en": "sweet"}],
+    "sentences": [
+      {"de": "Er schneidet den süßen Apfel auf dem Teller.", "en": "He cuts the sweet apple on the plate."},
+      {"de": "Der Teller ist sauber und leer.", "en": "The plate is clean and empty."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Treppe", "en": "the stairs", "note": "feminine"}, {"de": "die Wohnung", "en": "the flat", "note": "feminine"}],
+    "verbs": [{"de": "wohnen", "en": "to live", "conj": "er wohnt"}],
+    "adjs": [{"de": "hell", "en": "bright"}],
+    "sentences": [
+      {"de": "Sie wohnt in einer hellen Wohnung.", "en": "She lives in a bright flat."},
+      {"de": "Die Treppe führt in die Wohnung.", "en": "The stairs lead to the flat."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Regen", "en": "the rain", "note": "masculine"}, {"de": "der Schirm", "en": "the umbrella", "note": "masculine"}],
+    "verbs": [{"de": "nehmen", "en": "to take", "conj": "er nimmt"}],
+    "adjs": [{"de": "nass", "en": "wet"}],
+    "sentences": [
+      {"de": "Er nimmt den Schirm mit in den Regen.", "en": "He takes the umbrella into the rain."},
+      {"de": "Die Straße ist nass vom Regen.", "en": "The street is wet from the rain."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Lampe", "en": "the lamp", "note": "feminine"}, {"de": "der Schalter", "en": "the switch", "note": "masculine"}],
+    "verbs": [{"de": "schalten", "en": "to switch", "conj": "er schaltet"}],
+    "adjs": [{"de": "dunkel", "en": "dark"}],
+    "sentences": [
+      {"de": "Er schaltet die Lampe an weil es dunkel ist.", "en": "He switches on the lamp because it is dark."},
+      {"de": "Der Schalter ist neben der Tür.", "en": "The switch is next to the door."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Fluss", "en": "the river", "note": "masculine"}, {"de": "die Brücke", "en": "the bridge", "note": "feminine"}],
+    "verbs": [{"de": "überqueren", "en": "to cross", "conj": "er überquert"}],
+    "adjs": [{"de": "breit", "en": "wide"}],
+    "sentences": [
+      {"de": "Wir überqueren den breiten Fluss über die Brücke.", "en": "We cross the wide river over the bridge."},
+      {"de": "Die Brücke ist alt aber stabil.", "en": "The bridge is old but stable."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Kuchen", "en": "the cake", "note": "masculine"}, {"de": "der Ofen", "en": "the oven", "note": "masculine"}],
+    "verbs": [{"de": "backen", "en": "to bake", "conj": "er backt"}],
+    "adjs": [{"de": "lecker", "en": "delicious"}],
+    "sentences": [
+      {"de": "Sie backt einen leckeren Kuchen im Ofen.", "en": "She bakes a delicious cake in the oven."},
+      {"de": "Der Kuchen duftet sehr gut.", "en": "The cake smells very good."}
+    ]
+  },
+  {
+    "nouns": [{"de": "das Hemd", "en": "the shirt", "note": "neuter"}, {"de": "der Schrank", "en": "the wardrobe", "note": "masculine"}],
+    "verbs": [{"de": "anziehen", "en": "to put on", "conj": "er zieht an"}],
+    "adjs": [{"de": "sauber", "en": "clean"}],
+    "sentences": [
+      {"de": "Er zieht ein sauberes Hemd an.", "en": "He puts on a clean shirt."},
+      {"de": "Der Schrank ist voller Hemden und Hosen.", "en": "The wardrobe is full of shirts and trousers."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Vogel", "en": "the bird", "note": "masculine"}, {"de": "der Baum", "en": "the tree", "note": "masculine"}],
+    "verbs": [{"de": "singen", "en": "to sing", "conj": "er singt"}],
+    "adjs": [{"de": "laut", "en": "loud"}],
+    "sentences": [
+      {"de": "Der Vogel singt laut auf dem Baum.", "en": "The bird sings loudly in the tree."},
+      {"de": "Der Baum ist groß und hat viele Blätter.", "en": "The tree is big and has many leaves."}
+    ]
+  },
+  {
+    "nouns": [{"de": "das Fahrrad", "en": "the bicycle", "note": "neuter"}, {"de": "der Helm", "en": "the helmet", "note": "masculine"}],
+    "verbs": [{"de": "fahren", "en": "to ride", "conj": "er fährt"}],
+    "adjs": [{"de": "sicher", "en": "safe"}],
+    "sentences": [
+      {"de": "Sie fährt sicher mit dem Fahrrad zur Schule.", "en": "She rides safely to school on her bicycle."},
+      {"de": "Der Helm macht das Fahrradfahren sicher.", "en": "The helmet makes cycling safe."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Zahn", "en": "the tooth", "note": "masculine"}, {"de": "die Zahnbürste", "en": "the toothbrush", "note": "feminine"}],
+    "verbs": [{"de": "putzen", "en": "to brush", "conj": "er putzt"}],
+    "adjs": [{"de": "weiß", "en": "white"}],
+    "sentences": [
+      {"de": "Er putzt jeden Abend seine weißen Zähne.", "en": "He brushes his white teeth every evening."},
+      {"de": "Die Zahnbürste liegt im Badezimmer.", "en": "The toothbrush is in the bathroom."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Zug", "en": "the train", "note": "masculine"}, {"de": "das Ticket", "en": "the ticket", "note": "neuter"}],
+    "verbs": [{"de": "kaufen", "en": "to buy", "conj": "er kauft"}],
+    "adjs": [{"de": "teuer", "en": "expensive"}],
+    "sentences": [
+      {"de": "Er kauft ein teures Ticket für den Zug.", "en": "He buys an expensive ticket for the train."},
+      {"de": "Das Ticket kostet zwanzig Euro.", "en": "The ticket costs twenty euros."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der See", "en": "the lake", "note": "masculine"}, {"de": "das Boot", "en": "the boat", "note": "neuter"}],
+    "verbs": [{"de": "schwimmen", "en": "to swim", "conj": "er schwimmt"}],
+    "adjs": [{"de": "tief", "en": "deep"}],
+    "sentences": [
+      {"de": "Er schwimmt im tiefen See.", "en": "He swims in the deep lake."},
+      {"de": "Das Boot liegt ruhig auf dem See.", "en": "The boat rests quietly on the lake."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Zeitung", "en": "the newspaper", "note": "feminine"}, {"de": "der Sessel", "en": "the armchair", "note": "masculine"}],
+    "verbs": [{"de": "lesen", "en": "to read", "conj": "er liest"}],
+    "adjs": [{"de": "bequem", "en": "comfortable"}],
+    "sentences": [
+      {"de": "Er liest die Zeitung im bequemen Sessel.", "en": "He reads the newspaper in the comfortable armchair."},
+      {"de": "Die Zeitung liegt auf dem Tisch.", "en": "The newspaper is on the table."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Milch", "en": "the milk", "note": "feminine"}, {"de": "das Glas", "en": "the glass", "note": "neuter"}],
+    "verbs": [{"de": "gießen", "en": "to pour", "conj": "er gießt"}],
+    "adjs": [{"de": "voll", "en": "full"}],
+    "sentences": [
+      {"de": "Sie gießt die Milch in das volle Glas.", "en": "She pours the milk into the full glass."},
+      {"de": "Das Glas Milch ist kalt und frisch.", "en": "The glass of milk is cold and fresh."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Schlüssel", "en": "the key", "note": "masculine"}, {"de": "das Schloss", "en": "the lock", "note": "neuter"}],
+    "verbs": [{"de": "öffnen", "en": "to open", "conj": "er öffnet"}],
+    "adjs": [{"de": "alt", "en": "old"}],
+    "sentences": [
+      {"de": "Er öffnet das alte Schloss mit dem Schlüssel.", "en": "He opens the old lock with the key."},
+      {"de": "Der Schlüssel passt perfekt ins Schloss.", "en": "The key fits perfectly in the lock."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Strand", "en": "the beach", "note": "masculine"}, {"de": "das Handtuch", "en": "the towel", "note": "neuter"}],
+    "verbs": [{"de": "liegen", "en": "to lie", "conj": "er liegt"}],
+    "adjs": [{"de": "warm", "en": "warm"}],
+    "sentences": [
+      {"de": "Sie liegt auf dem warmen Strand.", "en": "She lies on the warm beach."},
+      {"de": "Das Handtuch liegt neben ihr auf dem Sand.", "en": "The towel lies next to her on the sand."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Kerze", "en": "the candle", "note": "feminine"}, {"de": "der Tisch", "en": "the table", "note": "masculine"}],
+    "verbs": [{"de": "anzünden", "en": "to light", "conj": "er zündet an"}],
+    "adjs": [{"de": "romantisch", "en": "romantic"}],
+    "sentences": [
+      {"de": "Er zündet die Kerze auf dem Tisch an.", "en": "He lights the candle on the table."},
+      {"de": "Das Abendessen ist romantisch mit Kerzen.", "en": "The dinner is romantic with candles."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Topf", "en": "the pot", "note": "masculine"}, {"de": "die Suppe", "en": "the soup", "note": "feminine"}],
+    "verbs": [{"de": "rühren", "en": "to stir", "conj": "er rührt"}],
+    "adjs": [{"de": "heiß", "en": "hot"}],
+    "sentences": [
+      {"de": "Sie rührt die heiße Suppe im Topf.", "en": "She stirs the hot soup in the pot."},
+      {"de": "Die Suppe riecht sehr gut.", "en": "The soup smells very good."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Fehler", "en": "the mistake", "note": "masculine"}, {"de": "das Heft", "en": "the notebook", "note": "neuter"}],
+    "verbs": [{"de": "korrigieren", "en": "to correct", "conj": "er korrigiert"}],
+    "adjs": [{"de": "falsch", "en": "wrong"}],
+    "sentences": [
+      {"de": "Der Lehrer korrigiert die falschen Fehler im Heft.", "en": "The teacher corrects the wrong mistakes in the notebook."},
+      {"de": "Das Heft ist voller Notizen.", "en": "The notebook is full of notes."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Katze", "en": "the cat", "note": "feminine"}, {"de": "das Sofa", "en": "the sofa", "note": "neuter"}],
+    "verbs": [{"de": "springen", "en": "to jump", "conj": "er springt"}],
+    "adjs": [{"de": "weich", "en": "soft"}],
+    "sentences": [
+      {"de": "Die Katze springt auf das weiche Sofa.", "en": "The cat jumps onto the soft sofa."},
+      {"de": "Das Sofa ist bequem und weich.", "en": "The sofa is comfortable and soft."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Schnee", "en": "the snow", "note": "masculine"}, {"de": "der Handschuh", "en": "the glove", "note": "masculine"}],
+    "verbs": [{"de": "schneien", "en": "to snow", "conj": "es schneit"}],
+    "adjs": [{"de": "kalt", "en": "cold"}],
+    "sentences": [
+      {"de": "Es schneit und der Boden ist kalt und weiß.", "en": "It is snowing and the ground is cold and white."},
+      {"de": "Er zieht die Handschuhe an weil es kalt ist.", "en": "He puts on his gloves because it is cold."}
+    ]
+  },
+  {
+    "nouns": [{"de": "die Tasse", "en": "the cup", "note": "feminine"}, {"de": "der Löffel", "en": "the spoon", "note": "masculine"}],
+    "verbs": [{"de": "umrühren", "en": "to stir", "conj": "er rührt um"}],
+    "adjs": [{"de": "heiß", "en": "hot"}],
+    "sentences": [
+      {"de": "Sie rührt den heißen Tee in der Tasse mit dem Löffel um.", "en": "She stirs the hot tea in the cup with the spoon."},
+      {"de": "Die Tasse ist aus Porzellan und sehr dünn.", "en": "The cup is made of porcelain and very thin."}
+    ]
+  },
+  {
+    "nouns": [{"de": "das Rezept", "en": "the recipe", "note": "neuter"}, {"de": "die Zutat", "en": "the ingredient", "note": "feminine"}],
+    "verbs": [{"de": "mischen", "en": "to mix", "conj": "er mischt"}],
+    "adjs": [{"de": "einfach", "en": "simple"}],
+    "sentences": [
+      {"de": "Das Rezept ist einfach und braucht nur wenige Zutaten.", "en": "The recipe is simple and needs only a few ingredients."},
+      {"de": "Er mischt alle Zutaten in einer Schüssel.", "en": "He mixes all the ingredients in a bowl."}
+    ]
+  },
+  {
+    "nouns": [{"de": "der Nachbar", "en": "the neighbour", "note": "masculine"}, {"de": "der Zaun", "en": "the fence", "note": "masculine"}],
+    "verbs": [{"de": "grüßen", "en": "to greet", "conj": "er grüßt"}],
+    "adjs": [{"de": "freundlich", "en": "friendly"}],
+    "sentences": [
+      {"de": "Er grüßt seinen freundlichen Nachbarn über den Zaun.", "en": "He greets his friendly neighbour over the fence."},
+      {"de": "Der Zaun trennt die beiden Gärten.", "en": "The fence separates the two gardens."}
+    ]
+  }
+]
