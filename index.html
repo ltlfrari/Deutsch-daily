@@ -68,7 +68,16 @@ button, a, [onclick] { touch-action: manipulation; }
     color: var(--accent);
     letter-spacing: -0.5px;
   }
-  .logo span { color: var(--accent); font-size: 16px; font-family: 'DM Sans', sans-serif; display: inline; font-weight: 700; letter-spacing: 1px; margin-left: 8px; background: rgba(212,175,55,0.15); padding: 2px 8px; border-radius: 6px; }
+  .logo span { display: inline-flex; gap: 4px; margin-left: 6px; vertical-align: middle; }
+  .level-sw-pill {
+    color: var(--muted); font-size: 13px; font-family: 'DM Sans', sans-serif;
+    font-weight: 700; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 6px;
+    border: 1.5px solid transparent; background: transparent; cursor: default;
+    font-family: inherit;
+  }
+  .level-sw-pill.unlocked { cursor: pointer; border-color: #2a2a4a; color: var(--muted); }
+  .level-sw-pill.unlocked:hover { border-color: var(--accent); color: var(--accent); }
+  .level-sw-pill.active { background: rgba(212,175,55,0.15); border-color: var(--accent); color: var(--accent); cursor: default; }
   .header-btns { display: flex; gap: 8px; }
   .icon-btn {
     background: var(--card);
@@ -510,6 +519,26 @@ button, a, [onclick] { touch-action: manipulation; }
   .history-test-retake { background: var(--surface); border: 1px solid #333355; color: var(--muted); font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 10px; cursor: pointer; font-family: inherit; white-space: nowrap; }
   .history-test-retake:active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
 
+  /* ── PACK SWITCHER ── */
+  .pack-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px 0 4px;
+    align-items: center;
+  }
+  .pack-switcher-label { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.5px; margin-right: 2px; }
+  .pack-sw-pill {
+    font-size: 12px; font-weight: 600; font-family: inherit;
+    padding: 5px 12px; border-radius: 16px; cursor: pointer;
+    border: 1.5px solid #2a2a4a; background: var(--surface); color: var(--muted);
+    transition: all 0.15s;
+  }
+  .pack-sw-pill.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .pack-sw-pill.done { border-color: var(--accent2); color: var(--accent2); }
+  .pack-sw-pill.active.done { background: var(--accent2); color: var(--bg); border-color: var(--accent2); }
+  .pack-sw-pill.loading { opacity: 0.5; cursor: wait; }
+
   /* ── EXTRA PACKS ── */
   .pack-banner {
     background: linear-gradient(135deg, #1a2a1a, #1a1a2e);
@@ -550,7 +579,7 @@ button, a, [onclick] { touch-action: manipulation; }
 <body>
 <div id="app">
   <header>
-    <div class="logo">Deutsch Daily <span id="level-badge">A1</span></div>
+    <div class="logo">Deutsch Daily <span id="level-selector"></span></div>
     <div class="header-btns">
       <button class="icon-btn" id="btn-notif" title="Enable notifications">🔔</button>
     </div>
@@ -581,6 +610,7 @@ button, a, [onclick] { touch-action: manipulation; }
       <div class="lesson-counter" id="lesson-counter"></div>
       <button class="nav-arrow" id="btn-next" onclick="navigateLesson(1)">›</button>
     </div>
+    <div id="pack-switcher" style="display:none"></div>
     <div id="lesson-content"></div>
   </div>
 
@@ -1013,6 +1043,7 @@ function renderLesson() {
   document.getElementById('streak-num').textContent = state.streak;
   document.getElementById('done-badge').style.display = doneTodayCount > 0 ? 'flex' : 'none';
   document.getElementById('done-badge').textContent = `✓ ${doneTodayCount} today`;
+  renderLevelSelector();
 
   const d = new Date();
 
@@ -1021,6 +1052,8 @@ function renderLesson() {
   const testIdx = blockNum; // test after this block
   const passed = getTestState();
   const totalTests = Math.floor(pool.length / TEST_INTERVAL);
+  const isSupplementaryPack = !!(state.activePack && state.activePack.level === state.level);
+  const builtInExamPassed = !!state.finalExamPassed[state.level];
 
   // "Test ready" shows whenever ALL lessons in the current block are done and test not yet passed,
   // regardless of which specific lesson is on screen right now.
@@ -1040,9 +1073,37 @@ function renderLesson() {
     counterEl.innerHTML = `Lesson ${currentLessonIdx + 1} of ${pool.length}`;
   }
 
-  // Final exam banner — show if all mini-tests passed but final exam not yet taken
-  const isSupplementaryPack = !!(state.activePack && state.activePack.level === state.level);
-  const builtInExamPassed = !!state.finalExamPassed[state.level];
+  // Pack switcher — show once built-in level exam is passed
+  const packSwitcherEl = document.getElementById('pack-switcher');
+  if (builtInExamPassed) {
+    const availPacks = state.availablePacks[state.level] || [];
+    const activePackId = state.activePack && state.activePack.level === state.level ? state.activePack.packId : null;
+    const builtInActive = !activePackId;
+    const builtInDone = builtInExamPassed;
+
+    let switcherHtml = `<span class="pack-switcher-label">${state.level}:</span>`;
+    // Built-in pill
+    switcherHtml += `<button class="pack-sw-pill${builtInActive ? ' active' : ''}${builtInDone ? ' done' : ''}" onclick="switchToBuiltInPack('${state.level}')">Built-in${builtInDone ? ' ✓' : ''}</button>`;
+    // Supplementary pack pills
+    availPacks.forEach(packId => {
+      const isDownloaded = !!state.downloadedPacks[`${state.level}:${packId}`];
+      const isActive = activePackId === packId;
+      const packExamKey = `${state.level}:${packId}`;
+      const isDoneExam = !!(state.finalExamPassed && state.finalExamPassed[packExamKey]);
+      const label = packId.replace('-', ' ').replace(/\b\w/g, c => c.toUpperCase());
+      if (isDownloaded) {
+        switcherHtml += `<button class="pack-sw-pill${isActive ? ' active' : ''}${isDoneExam ? ' done' : ''}" onclick="switchPackTo('${state.level}','${packId}')">${label}${isDoneExam ? ' ✓' : ''}</button>`;
+      } else {
+        switcherHtml += `<button class="pack-sw-pill" onclick="handlePackSelect('${state.level}','${packId}')" data-pack="${packId}">${label} ↓</button>`;
+      }
+    });
+    packSwitcherEl.innerHTML = `<div class="pack-switcher">${switcherHtml}</div>`;
+    packSwitcherEl.style.display = 'block';
+  } else {
+    packSwitcherEl.innerHTML = '';
+    packSwitcherEl.style.display = 'none';
+  }
+
   const finalExamBanner = allMiniTestsPassed() && !hasFinalExamPassed();
   let html = '';
 
@@ -1055,7 +1116,6 @@ function renderLesson() {
         <div class="pack-banner-title">Pack Complete!</div>
         <div class="pack-banner-sub">You've finished all 25 lessons in ${state.activePack.packId.replace('-',' ').replace(/\b\w/g,c=>c.toUpperCase())}. Take the optional 40-question level test to check your progress.</div>
         <button class="pack-banner-btn" onclick="startFinalExam('${state.level}', '${state.activePack.packId}')">📝 Optional Level Test →</button>
-        <button class="pack-banner-btn secondary" onclick="showPackChooser('${state.level}')">More packs</button>
       </div>`;
     } else {
       html += `
@@ -1277,7 +1337,7 @@ function renderSettings() {
   document.getElementById('nag-toggle').checked = state.nagEnabled;
   document.getElementById('nag-time').value = state.nagTime;
   document.getElementById('hide-toggle').checked = state.hideTranslations;
-  document.getElementById('level-badge').textContent = state.level;
+  renderLevelSelector();
 }
 
 // ── NAG BANNER ───────────────────────────────────────────────────────────────
@@ -1561,7 +1621,15 @@ function renderQuiz() {
         msg = passed
           ? `Excellent! You scored ${pct}% on the ${finalExamLevel} Pack test. This was optional — your progress is unaffected.`
           : `You scored ${pct}%. Keep reviewing the pack lessons and try again any time.`;
-        btnLabel = 'Back to lessons';
+        el.innerHTML = `
+          <div class="quiz-result">
+            <div class="quiz-result-emoji">${passed ? '🎉' : '😓'}</div>
+            <div class="quiz-result-title">${passed ? 'Ausgezeichnet!' : 'Nicht ganz...'}</div>
+            <div class="quiz-result-score">${score} / ${total} correct — ${pct}%</div>
+            <div class="quiz-result-msg">${msg}</div>
+            <button class="quiz-result-btn" onclick="backToLessons()">Back to lessons</button>
+          </div>`;
+        return;
       } else {
         subtitle = passed ? 'Exam passed!' : 'Exam failed';
         msg = passed
@@ -1675,11 +1743,17 @@ function nextQuizQuestion() {
   document.getElementById('screen-quiz').scrollTop = 0;
 }
 
+function backToLessons() {
+  quizState = null;
+  showScreen('today');
+  renderLesson();
+}
+
 function advanceLevel(fromLevel, toLevel) {
   state.level = toLevel;
   state.activePack = null;
   currentLessonIdx = 0;
-  document.getElementById('level-badge').textContent = toLevel;
+  renderLevelSelector();
   saveState(state);
   quizState = null;
   showScreen('today');
@@ -1708,9 +1782,10 @@ function finishQuiz(passed) {
   if (isFinalExam) {
     if (passed) {
       if (!state.finalExamPassed) state.finalExamPassed = {};
-      const examKey = quizState.practiceMode
-        ? null
-        : (quizState.packId ? `${finalExamLevel}:${quizState.packId}` : finalExamLevel);
+      // Always record pack exam passes (even though they're optional/practice)
+      const examKey = quizState.packId
+        ? `${finalExamLevel}:${quizState.packId}`
+        : (quizState.practiceMode ? null : finalExamLevel);
       if (examKey) {
         state.finalExamPassed[examKey] = true;
         saveState(state);
@@ -1798,12 +1873,33 @@ function activatePack(level, packId) {
   renderLesson();
 }
 
+function switchPackTo(level, packId) {
+  // Save current position before switching
+  const currentKey = getPoolKey();
+  if (!state.seenIndex) state.seenIndex = {};
+  state.seenIndex[currentKey] = currentLessonIdx;
+
+  state.activePack = { level, packId };
+  state.level = level;
+  const targetKey = `${level}:${packId}`;
+  currentLessonIdx = state.seenIndex[targetKey] || 0;
+  saveState(state);
+  renderLesson();
+  document.getElementById('screen-today').scrollTop = 0;
+}
+
 function switchToBuiltInPack(level) {
+  // Save current position before switching
+  const currentKey = getPoolKey();
+  if (!state.seenIndex) state.seenIndex = {};
+  state.seenIndex[currentKey] = currentLessonIdx;
+
   state.activePack = null;
   state.level = level;
   currentLessonIdx = state.seenIndex[level] || 0;
   saveState(state);
   renderLesson();
+  document.getElementById('screen-today').scrollTop = 0;
 }
 
 async function handlePackSelect(level, packId) {
@@ -1814,10 +1910,39 @@ async function handlePackSelect(level, packId) {
   const ok = await downloadPack(level, packId);
   if (!ok) {
     alert('Could not download pack. Please check your connection and try again.');
-    if (btn) { btn.classList.remove('downloading'); btn.textContent = packId.replace('-', ' ').replace(/\b\w/g, c => c.toUpperCase()); }
+    if (btn) { btn.classList.remove('downloading'); btn.textContent = packId.replace('-', ' ').replace(/\b\w/g, c => c.toUpperCase()) + ' ↓'; }
     return;
   }
-  activatePack(level, packId);
+  switchPackTo(level, packId);
+}
+
+function renderLevelSelector() {
+  const LEVEL_ORDER = ['A1','A2','B1','B2','C1','C2'];
+  const el = document.getElementById('level-selector');
+  if (!el) return;
+  let html = '';
+  LEVEL_ORDER.forEach(lvl => {
+    const isActive = lvl === state.level;
+    const isPassed = lvl === 'A1' || !!(state.finalExamPassed && state.finalExamPassed[LEVEL_ORDER[LEVEL_ORDER.indexOf(lvl) - 1]]);
+    if (isActive) {
+      html += `<button class="level-sw-pill active">${lvl}</button>`;
+    } else if (isPassed) {
+      html += `<button class="level-sw-pill unlocked" onclick="switchToLevel('${lvl}')">${lvl}</button>`;
+    }
+  });
+  el.innerHTML = html;
+}
+
+function switchToLevel(level) {
+  if (level === state.level) return;
+  state.activePack = null;
+  state.level = level;
+  currentLessonIdx = state.seenIndex[level] || 0;
+  
+  saveState(state);
+  renderLevelSelector();
+  renderLesson();
+  document.getElementById('screen-today').scrollTop = 0;
 }
 
 function showPackChooser(level) {
@@ -1911,7 +2036,13 @@ function showScreen(name) {
   const navBtn = document.querySelector(`.nav-btn[data-screen="${name}"]`);
   if (navBtn) navBtn.classList.add('active');
   currentScreen = name;
-  if (name === 'today') { renderLesson(); }
+  if (name === 'today') {
+    renderLesson();
+    // Refresh manifest in background so pack switcher stays up to date
+    if (state.finalExamPassed && state.finalExamPassed[state.level]) {
+      fetchManifest().then(() => renderLesson());
+    }
+  }
   if (name === 'history') renderHistory();
   if (name === 'settings') renderSettings();
   if (name === 'quiz') renderQuiz();
@@ -1948,7 +2079,7 @@ function saveSettings() {
   state.nagTime = document.getElementById('nag-time').value;
   state.hideTranslations = document.getElementById('hide-toggle').checked;
   saveState(state);
-  document.getElementById('level-badge').textContent = state.level;
+  renderLevelSelector();
 
   // flash confirmation
   const btn = document.getElementById('save-settings');
@@ -2012,6 +2143,7 @@ document.getElementById('btn-notif').addEventListener('click', requestNotifPermi
   }
 })();
 
+renderLevelSelector();
 renderLesson();
 renderSettings();
 initServiceWorker();
