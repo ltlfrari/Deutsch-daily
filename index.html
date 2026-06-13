@@ -1086,7 +1086,7 @@ function renderLesson() {
   }
 
   // DEV cheat button — top of page
-  html += `<button onclick="cheatMarkBlock()" style="width:100%;background:#3a1a1a;border:1px dashed #884444;color:#cc6666;font-size:11px;font-family:inherit;padding:6px;border-radius:8px;cursor:pointer;margin-bottom:10px;">⚡ DEV: Mark all ${TEST_INTERVAL} lessons in this block as studied</button>`;
+  html += `<button onclick="cheatMarkBlock()" style="display:none;">⚡ DEV: Mark all ${TEST_INTERVAL} lessons in this block as studied</button>`;
 
   // Nouns
   lesson.nouns.forEach(n => {
@@ -1569,20 +1569,7 @@ function renderQuiz() {
           : 'You need 90% to pass the Level Exam. Review your lessons and try again.';
         if (passed && nextLevel) {
           btnLabel = `🎉 Advance to ${nextLevel} →`;
-          // Fetch manifest fresh to ensure we have up-to-date pack list
-          fetchManifest().then(() => {
-            console.log('manifest fetched, availablePacks:', JSON.stringify(state.availablePacks));
-            const packs = state.availablePacks[finalExamLevel] || [];
-            console.log('packs for', finalExamLevel, ':', packs);
-            const stayBtn = document.getElementById('quiz-stay-btn');
-            console.log('stayBtn element:', stayBtn);
-            if (packs.length > 0 && stayBtn) {
-              stayBtn.style.display = 'block';
-              console.log('Stay button shown');
-            }
-          });
           extraBtn = `<button id="quiz-stay-btn" class="quiz-result-btn" style="background:var(--accent2);margin-top:0;display:none" onclick="finishQuizStay('${finalExamLevel}')">📦 Stay on ${finalExamLevel} — get more content</button>`;
-          // Advance button uses dedicated function
           el.innerHTML = `
             <div class="quiz-result">
               <div class="quiz-result-emoji">🎉</div>
@@ -1592,7 +1579,6 @@ function renderQuiz() {
               <button class="quiz-result-btn" onclick="advanceLevel('${finalExamLevel}', '${nextLevel}')">${btnLabel}</button>
               ${extraBtn}
             </div>`;
-          // Fetch manifest after rendering so stay button can appear
           fetchManifest().then(() => {
             const packs = state.availablePacks[finalExamLevel] || [];
             const stayBtn = document.getElementById('quiz-stay-btn');
@@ -1639,7 +1625,7 @@ function renderQuiz() {
       <div class="quiz-subtitle">${headerSub}</div>
       <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${progressPct}%"></div></div>
       <div class="quiz-progress-label">${current} / ${total}</div>
-      <button onclick="cheatPass()" style="margin-top:10px;width:100%;background:#3a1a1a;border:1px dashed #884444;color:#cc6666;font-size:11px;font-family:inherit;padding:6px;border-radius:8px;cursor:pointer;">⚡ DEV: Mark as Passed</button>
+      <button onclick="cheatPass()" style="display:none;">⚡ DEV: Mark as Passed</button>
     </div>
     <div class="quiz-question-card">
       <div class="quiz-q-type">${q.typeLabel}</div>
@@ -1780,17 +1766,13 @@ const DATA_BASE = 'data'; // relative path — works on GitHub Pages
 async function fetchManifest() {
   try {
     const url = `${DATA_BASE}/manifest.json?t=${Date.now()}`;
-    console.log('Fetching manifest from:', url);
     const res = await fetch(url);
-    console.log('Manifest response status:', res.status);
     if (!res.ok) return null;
     const data = await res.json();
-    console.log('Manifest data:', JSON.stringify(data));
     state.availablePacks = data.packs || {};
     saveState(state);
     return data.packs;
   } catch(e) { 
-    console.error('fetchManifest error:', e);
     return null; 
   }
 }
