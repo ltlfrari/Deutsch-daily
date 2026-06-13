@@ -1612,7 +1612,15 @@ function renderQuiz() {
         msg = passed
           ? `Excellent! You scored ${pct}% on the ${finalExamLevel} Pack test. This was optional — your progress is unaffected.`
           : `You scored ${pct}%. Keep reviewing the pack lessons and try again any time.`;
-        btnLabel = 'Back to lessons';
+        el.innerHTML = `
+          <div class="quiz-result">
+            <div class="quiz-result-emoji">${passed ? '🎉' : '😓'}</div>
+            <div class="quiz-result-title">${passed ? 'Ausgezeichnet!' : 'Nicht ganz...'}</div>
+            <div class="quiz-result-score">${score} / ${total} correct — ${pct}%</div>
+            <div class="quiz-result-msg">${msg}</div>
+            <button class="quiz-result-btn" onclick="backToLessons()">Back to lessons</button>
+          </div>`;
+        return;
       } else {
         subtitle = passed ? 'Exam passed!' : 'Exam failed';
         msg = passed
@@ -1724,6 +1732,12 @@ function nextQuizQuestion() {
   quizState.current++;
   renderQuiz();
   document.getElementById('screen-quiz').scrollTop = 0;
+}
+
+function backToLessons() {
+  quizState = null;
+  showScreen('today');
+  renderLesson();
 }
 
 function advanceLevel(fromLevel, toLevel) {
